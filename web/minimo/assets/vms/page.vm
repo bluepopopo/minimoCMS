@@ -35,8 +35,24 @@
         <section class="content">
 
 
+            <script type="text/javascript">
+
+                function addListElement(id,path){
+                    $.post( "/minimo/page/$page.name()/addListElement", {listid:id}, function( data ) {
+                        console.log(data);
+                        $( "#accordion-"+id ).append( data );
+                    });
+                }
+
+                function deleteListElement(elementId,listId){
+                    $('#wrapper-'+elementId).remove();
+                    $('#accordion-'+listId).append("<input type='hidden' name='deleted:"+elementId+"' value='true' />");
+                }
+            </script>
+            <form action="/minimo/page/$page.name()" method="POST">
 
             $page.render()
+            </form>
 ##            #parse("${vmPath}/render/mo-page.vm")
 
 

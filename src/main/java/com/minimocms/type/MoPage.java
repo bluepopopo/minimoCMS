@@ -2,14 +2,12 @@ package com.minimocms.type;
 
 import com.minimocms.utils.IdUtil;
 import com.minimocms.utils.JsonUtil;
+import com.minimocms.utils.Pair;
 import com.minimocms.utils.Velocity;
 import spark.ModelAndView;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -158,5 +156,43 @@ public class MoPage implements Serializable {
 
     public void setChildren(Map<String, GenericContent> children) {
         this.children = children;
+    }
+
+    public String findPath(String listid) {
+        Stack<Pair<String,GenericContent>> stack = new Stack<>();
+        stack.addAll(this.children().stream().map(
+                c -> (Pair<String, GenericContent>) new Pair("/" + c.id(), c))
+                .collect(Collectors.toList()));
+
+        while(stack.empty()==false){
+            Pair<String,GenericContent> p = stack.pop();
+            if(p.second.id().equals(listid))
+                return p.first;
+            else
+                stack.addAll(
+                        p.second.children().stream().map(
+                                c -> (Pair<String, GenericContent>) new Pair(p.first + "/" + c.id(), c))
+                                .collect(Collectors.toList()));
+        }
+        return null;
+    }
+
+    public GenericContent find(String listid) {
+        Stack<GenericContent> stack = new Stack<>();
+        stack.addAll(this.children());
+        while(stack.empty()==false){
+            GenericContent c = stack.pop();
+            if(c.id().equals(listid))
+                return c;
+            else
+                stack.addAll(c.children());
+        }
+        return null;
+    }
+
+    public GenericContent getChildById(String id) {
+        List<GenericContent> cs = children().stream().filter(c->c.id().equals(id)).collect(Collectors.toList());
+        if(cs.size()==1)return cs.get(0);
+        else throw new IllegalArgumentException("No child in page by id:"+id);
     }
 }

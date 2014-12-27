@@ -3,6 +3,7 @@ package com.minimocms.type;
 import com.minimocms.utils.IdUtil;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -62,14 +63,17 @@ public abstract class MoItem implements GenericContent, Serializable {
 
     @Override
     public Collection<GenericContent> children() {
-        throw new UnsupportedOperationException("Cannot call children() on 'Item' type");
+        return new ArrayList<>();
     }
 
     @Override
     public String id() {
         return _id;
     }
-
+    @Override
+    public void setId(String _id) {
+        this._id = _id;
+    }
     @Override
     public boolean hasChildren() {
         return false;

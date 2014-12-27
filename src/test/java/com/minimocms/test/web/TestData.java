@@ -11,7 +11,7 @@ public class TestData {
         page("about");
 
 
-        page("home").list("mylist1").add("Item-1");
-        page("home").list("mylist1").add("Item-2");
+        page("home").list("mylist1").add();
+        page("home").list("mylist1").add();
     }
 }

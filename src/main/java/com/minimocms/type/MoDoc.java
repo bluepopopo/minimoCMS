@@ -140,6 +140,10 @@ public class MoDoc implements GenericContent, Serializable {
     public void name(String name) {
         this.name=name;
     }
+    @Override
+    public void setId(String _id) {
+        this._id = _id;
+    }
 
     @Override
     public void label(String label) {

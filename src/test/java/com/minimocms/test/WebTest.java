@@ -17,6 +17,7 @@ public class WebTest {
         Minimo.init("web-test",new MongoDataStoreImpl("web-test"));
         TestStructure.create();
         TestData.create();
+        Minimo.persist();
         System.out.println(new Gson().toJson(pages()));
 
     }

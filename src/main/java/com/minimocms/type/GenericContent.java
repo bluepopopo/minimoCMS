@@ -11,6 +11,7 @@ public interface GenericContent {
     public String text();
     public Collection<GenericContent> children();
     public String id();
+    public void setId(String id);
     public boolean hasChildren();
     public int nChildren();
     public String render(String path);
@@ -19,4 +20,10 @@ public interface GenericContent {
     public void name(String name);
     public void label(String label);
     public GenericContent copy();
+    public GenericContent getOrCreateChildById(String id);
+    public GenericContent getChildById(String id);
+
+    public void setValue(String value);
+
+    public void removeChildById(String toDelete);
 }

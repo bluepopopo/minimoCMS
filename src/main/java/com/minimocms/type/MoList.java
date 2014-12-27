@@ -102,6 +102,11 @@ public class MoList  implements GenericContent, Serializable {
     public void set_id(String _id) {
         this._id = _id;
     }
+    @Override
+    public void setId(String _id) {
+        this._id = _id;
+    }
+
 
     @Override
     public boolean hasChildren() {
@@ -162,10 +167,15 @@ public class MoList  implements GenericContent, Serializable {
         itemTemplate = c;
     }
 
-    public void add(String name) {
+    public GenericContent add() {
         GenericContent item = itemTemplate.copy();
-        item.name(name);
-        item.label(name);
-        children.put(name,item);
+        children.put(item.id(),item);
+        return item;
+    }
+    public GenericContent add(String id) {
+        GenericContent item = itemTemplate.copy();
+        item.setId(id);
+        children.put(item.id(),item);
+        return item;
     }
 }

@@ -17,6 +17,7 @@ import spark.utils.IOUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -33,7 +34,7 @@ public class MongoDataStoreImpl implements DataStoreInterface {
     public List<MoPage> pages() {
         List<MoPage> pages = new ArrayList<>();
         for(DBObject o:store.collection(Collections.PAGES).find()){
-            pages.add(JsonUtil.gson().fromJson(o.toString(),MoPage.class));
+            pages.add(JsonUtil.gson().fromJson(o.toString(), MoPage.class));
         }
         return pages;
     }
@@ -42,7 +43,7 @@ public class MongoDataStoreImpl implements DataStoreInterface {
     public List<MoUser> users() {
         List<MoUser> users = new ArrayList<>();
         for(DBObject o:store.collection(Collections.USERS).find()){
-            users.add(JsonUtil.gson().fromJson(o.toString(),MoUser.class));
+            users.add(JsonUtil.gson().fromJson(o.toString(), MoUser.class));
         }
         return users;
     }
@@ -74,13 +75,13 @@ public class MongoDataStoreImpl implements DataStoreInterface {
     }
 
     @Override
-    public void savePages(List<MoPage> pages) {
+    public void savePages(Collection<MoPage> pages) {
         for(MoPage page:pages)
             savePage(page);
     }
 
     @Override
-    public void saveUsers(List<MoUser> users) {
+    public void saveUsers(Collection<MoUser> users) {
         for(MoUser user:users)
             saveUser(user);
     }

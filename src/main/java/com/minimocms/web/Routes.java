@@ -1,7 +1,10 @@
 package com.minimocms.web;
 
 import com.minimocms.Minimo;
+import com.minimocms.type.MoList;
+import com.minimocms.type.MoPage;
 import com.minimocms.type.MoUser;
+import com.minimocms.utils.JsonUtil;
 import com.minimocms.utils.PasswordHash;
 import com.minimocms.utils.Velocity;
 import spark.ModelAndView;
@@ -23,6 +26,39 @@ public class Routes implements SparkApplication {
 
         staticFileLocation("/minimo"); // Static files
 
+        get("/minimo/page/:name", (req, resp) -> {
+            Map<String, Object> model = new HashMap<>();
+
+            model.put("pages",pages());
+            model.put("page",page(req.params("name")));
+
+            return new ModelAndView(model, "/minimo/assets/vms/page.vm");
+        }, Velocity.engine);
+
+        post("/minimo/page/:name", (req, resp) -> {
+            Minimo.save(req.params("name"),req);
+//            JsonUtil.println(req.queryParams());
+            resp.redirect("/minimo/page/" + req.params("name"));
+            return "";
+        });
+
+        post("/minimo/page/:name/addListElement", (req,resp) -> {
+            MoPage page = page(req.params("name"));
+            MoList ls = (MoList)page.find(req.queryParams("listid"));
+            String path = page.findPath(req.queryParams("listid"));
+
+            System.out.println("adding list element"+req.queryParams("listid"));
+
+            Map<String, Object> model = new HashMap<>();
+            model.put("pages",pages());
+            model.put("id",ls.id());
+            model.put("path",path);
+            model.put("c", ls.add());
+
+            Minimo.rollbackPages();
+            return new ModelAndView(model,"/minimo/assets/vms/render/mo-list-element.vm");
+        },Velocity.engine);
+
         before("/minimo/*", (req,resp) -> {
             if(req.session().attribute("user")==null) {
                 if(Minimo.store().users().size()>0)
@@ -36,6 +72,7 @@ public class Routes implements SparkApplication {
             Map<String, Object> model = new HashMap<>();
             return new ModelAndView(model,"/minimo/assets/vms/create-user.vm");
         }, Velocity.engine);
+
         post("/create-user", (req,resp)->{
             if(Minimo.store().users().size()>0){
                 resp.redirect("/login");
@@ -60,19 +97,6 @@ public class Routes implements SparkApplication {
         }, Velocity.engine);
 
 
-        get("/minimo/page/:name", (req, resp) -> {
-            Map<String, Object> model = new HashMap<>();
-
-            model.put("pages",pages());
-            model.put("page",page(req.params("name")));
-
-            return new ModelAndView(model, "/minimo/assets/vms/page.vm");
-        }, Velocity.engine);
-        post("/minimo/page/:name", (req, resp) -> {
-            Minimo.save(req.params("name"),req);
-            resp.redirect("/minimo/page/" + req.params("name"));
-            return "";
-        });
 
 
         get("/login", (req,resp) -> {
@@ -82,12 +106,18 @@ public class Routes implements SparkApplication {
         }, Velocity.engine);
         
         post("/login", (req, resp) -> {
-            String user = req.queryParams("username");
+            String username = req.queryParams("username");
             String pass = req.queryParams("password");
-            if (user.equals("root") && pass.equals("welcome1")) {
-                req.session().attribute("username", user);
+
+            MoUser user = Minimo.store().user(username);
+
+            if (user!=null&&PasswordHash.validatePassword(pass, user.getPassHash())) {
+                req.session().attribute("user", user);
+                System.out.println("validated");
                 resp.redirect("/minimo");
             } else {
+                System.out.println("invalid");
+                System.out.println(JsonUtil.toJson(user));
                 resp.redirect("/login");
             }
             return "";
