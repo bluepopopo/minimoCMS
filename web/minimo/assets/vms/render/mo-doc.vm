@@ -1,0 +1,14 @@
+
+    <div class="box box-danger">
+        <div class="box-header">
+            <i class="fa fa-warning"></i>
+            <h3 class="box-title">$label</h3>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+
+
+            #parse("/minimo/assets/vms/render/mo-doc-min.vm")
+
+
+        </div><!-- /.box-body -->
+    </div><!-- /.box -->
