@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class Minimo {
 
-    DataStoreInterface store;
+    public DataStoreInterface store;
     String siteName;
     private Map<String,MoPage> pages = new HashMap<>();
 
@@ -53,5 +53,9 @@ public class Minimo {
 
 
 
+    }
+
+    public static DataStoreInterface store() {
+        return instance().store;
     }
 }
