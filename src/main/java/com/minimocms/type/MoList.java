@@ -70,11 +70,11 @@ public class MoList  implements GenericContent, Serializable {
 
     @Override
     public String render(String path) {
-        return Velocity.engine.render(new ModelAndView(model(path),"/assets/minimo/vms/render/mo-list.vm"));
+        return Velocity.engine.render(new ModelAndView(model(path),"/assets/minimoassets/vms/render/mo-list.vm"));
     }
     @Override
     public String renderMinimal(String path) {
-        return Velocity.engine.render(new ModelAndView(model(path),"/assets/minimo/vms/render/mo-list-min.vm"));
+        return Velocity.engine.render(new ModelAndView(model(path),"/assets/minimoassets/vms/render/mo-list-min.vm"));
     }
     @Override
     public String label() {

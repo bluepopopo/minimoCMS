@@ -68,12 +68,12 @@ public class MoDoc implements GenericContent, Serializable {
 
     @Override
     public String render(String path) {
-        return Velocity.engine.render(new ModelAndView(model(path),"/assets/minimo/vms/render/mo-doc.vm"));
+        return Velocity.engine.render(new ModelAndView(model(path),"/assets/minimoassets/vms/render/mo-doc.vm"));
     }
 
     @Override
     public String renderMinimal(String path) {
-        return Velocity.engine.render(new ModelAndView(model(path),"/assets/minimo/vms/render/mo-doc-min.vm"));
+        return Velocity.engine.render(new ModelAndView(model(path),"/assets/minimoassets/vms/render/mo-doc-min.vm"));
     }
 
     @Override

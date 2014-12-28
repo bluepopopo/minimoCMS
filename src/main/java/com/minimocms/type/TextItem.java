@@ -84,12 +84,12 @@ public class TextItem extends MoItem {
 
     @Override
     public String render(String path) {
-        return Velocity.engine.render(new ModelAndView(model(path),"/assets/minimo/vms/render/mo-text-item.vm"));
+        return Velocity.engine.render(new ModelAndView(model(path),"/assets/minimoassets/vms/render/mo-text-item.vm"));
     }
 
     @Override
     public String renderMinimal(String path) {
-        return Velocity.engine.render(new ModelAndView(model(path),"/assets/minimo/vms/render/mo-text-item-min.vm"));
+        return Velocity.engine.render(new ModelAndView(model(path),"/assets/minimoassets/vms/render/mo-text-item-min.vm"));
     }
 
 

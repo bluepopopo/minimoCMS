@@ -126,7 +126,7 @@ public class MoPage implements Serializable {
         model.put("lists",lists());
         model.put("items",items());
 
-        return Velocity.engine.render(new ModelAndView(model, "/assets/minimo/vms/render/mo-page.vm"));
+        return Velocity.engine.render(new ModelAndView(model, "/assets/minimoassets/vms/render/mo-page.vm"));
     }
 
     @Override
