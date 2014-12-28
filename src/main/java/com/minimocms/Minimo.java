@@ -2,11 +2,10 @@ package com.minimocms;
 
 import com.minimocms.data.DataStoreInterface;
 import com.minimocms.type.GenericContent;
-import com.minimocms.type.MoFileItem;
+import com.minimocms.type.MoImageItem;
 import com.minimocms.type.MoPage;
 import com.minimocms.utils.FormUtil;
 import com.minimocms.web.Routes;
-import org.apache.commons.fileupload.FileItem;
 import spark.Request;
 import spark.utils.IOUtils;
 
@@ -17,9 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * Created by MattUpstairs on 27/12/2014.
- */
 public class Minimo {
 
     public DataStoreInterface store;
@@ -72,16 +68,16 @@ public class Minimo {
         FormUtil form = new FormUtil(req);
         form.parseFormInputs();
 
-        System.out.println("\n\nListing qparams");
-        form.queryParams().forEach(p -> {
-            System.out.println("param:" + p + "=" + form.queryParam(p));
-        });
-        System.out.println("Listing files");
-
-        form.files().forEach(p -> {
-            FileItem f = form.file(p);
-            System.out.println("file:" +p+" "+ f.getFieldName() + " " + f.getContentType() + " " + f.getName());
-        });
+//        System.out.println("\n\nListing qparams");
+//        form.queryParams().forEach(p -> {
+//            System.out.println("param:" + p + "=" + form.queryParam(p));
+//        });
+//        System.out.println("Listing files");
+//
+//        form.files().forEach(p -> {
+//            FileItem f = form.file(p);
+//            System.out.println("file:" +p+" "+ f.getFieldName() + " " + f.getContentType() + " " + f.getName());
+//        });
 
         form.queryParams().stream().filter(p->p.startsWith("/")).forEach(p -> {
             String value = form.queryParam(p);
@@ -131,7 +127,7 @@ public class Minimo {
                 }
             }
 
-            MoFileItem f = (MoFileItem)c;
+            MoImageItem f = (MoImageItem)c;
 
             if(form.files().contains(p.substring("img:".length()))) {
                 try {

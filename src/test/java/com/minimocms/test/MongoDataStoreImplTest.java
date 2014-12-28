@@ -6,9 +6,6 @@ import com.minimocms.test.web.TestData;
 import com.minimocms.type.MoPage;
 import com.minimocms.utils.JsonUtil;
 
-/**
- * Created by MattUpstairs on 27/12/2014.
- */
 public class MongoDataStoreImplTest {
     static MongoDataStoreImpl store = new MongoDataStoreImpl("test");
     public static void main(String args[]){

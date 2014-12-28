@@ -9,9 +9,6 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Created by MattUpstairs on 27/12/2014.
- */
 public class MoDoc implements GenericContent, Serializable {
 
     String name;
@@ -101,7 +98,6 @@ public class MoDoc implements GenericContent, Serializable {
 
     public <T extends MoItem> void addItem(T i, Builder<T> b) {
         b.build(i);
-        System.out.println("name:"+i.name());
         children.add(i);
     }
 

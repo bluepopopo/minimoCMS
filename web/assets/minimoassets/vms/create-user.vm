@@ -34,7 +34,7 @@
         <!-- Main content -->
         <section class="content">
 
-            <form action="/create-user" method="POST">
+            <form action="/mo-create-user" method="POST">
                 <input type="text" name="username"/>
                 <input type="password" name="password"/>
                 <input type="submit" value="Register"/>

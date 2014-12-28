@@ -10,9 +10,6 @@ import com.mongodb.util.JSON;
 
 import java.net.UnknownHostException;
 
-/**
- * Created by MattUpstairs on 27/12/2014.
- */
 public class MongoStore {
 
     final static String SERVER="localhost";

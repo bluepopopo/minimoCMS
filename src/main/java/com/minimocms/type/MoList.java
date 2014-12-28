@@ -8,9 +8,6 @@ import spark.ModelAndView;
 import java.io.Serializable;
 import java.util.*;
 
-/**
- * Created by MattUpstairs on 27/12/2014.
- */
 public class MoList  implements GenericContent, Serializable {
     String name;
     String label;

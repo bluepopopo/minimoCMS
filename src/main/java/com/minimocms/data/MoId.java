@@ -2,9 +2,6 @@ package com.minimocms.data;
 
 import org.bson.types.ObjectId;
 
-/**
- * Created by MattUpstairs on 27/12/2014.
- */
 public class MoId {
     String id;
 

@@ -5,9 +5,6 @@ import com.minimocms.utils.JsonUtil;
 
 import java.lang.reflect.Type;
 
-/**
- * Created by MattUpstairs on 27/12/2014.
- */
 public class GenericContentSerializer implements JsonSerializer<GenericContent>{
 
     @Override
@@ -20,8 +17,8 @@ public class GenericContentSerializer implements JsonSerializer<GenericContent>{
                     return JsonUtil.gson().toJsonTree(genericContent, MoList.class);
                 case Types.textItem:
                     return JsonUtil.gson().toJsonTree(genericContent, MoTextItem.class);
-                case Types.fileItem:
-                    return JsonUtil.gson().toJsonTree(genericContent, MoFileItem.class);
+                case Types.imageItem:
+                    return JsonUtil.gson().toJsonTree(genericContent, MoImageItem.class);
                 case Types.textAreaItem:
                     return JsonUtil.gson().toJsonTree(genericContent, MoTextAreaItem.class);
                 default:

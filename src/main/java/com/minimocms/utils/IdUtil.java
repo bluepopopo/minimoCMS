@@ -4,9 +4,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
-/**
- * Created by MattUpstairs on 27/12/2014.
- */
 public class IdUtil {
     public static String createId(){
         return UUID.randomUUID().toString().substring(0,8);

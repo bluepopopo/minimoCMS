@@ -2,9 +2,6 @@ package com.minimocms.type;
 
 import java.util.Collection;
 
-/**
- * Created by MattUpstairs on 27/12/2014.
- */
 public interface GenericContent {
     public String type();
     public String name();

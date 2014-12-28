@@ -6,9 +6,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
-/**
- * Created by MattUpstairs on 27/12/2014.
- */
 public abstract class MoItem implements GenericContent, Serializable {
     String name;
     String label;

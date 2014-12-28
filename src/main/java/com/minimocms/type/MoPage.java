@@ -10,9 +10,6 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Created by MattUpstairs on 27/12/2014.
- */
 public class MoPage implements Serializable {
 
     String name;

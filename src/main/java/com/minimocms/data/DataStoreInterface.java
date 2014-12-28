@@ -6,9 +6,6 @@ import com.minimocms.type.MoUser;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * Created by MattUpstairs on 27/12/2014.
- */
 public interface DataStoreInterface {
 
     public List<MoPage> pages();

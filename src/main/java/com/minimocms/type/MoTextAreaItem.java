@@ -6,9 +6,6 @@ import spark.ModelAndView;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by MattUpstairs on 29/12/2014.
- */
 public class MoTextAreaItem extends MoItem {
     String text="";
     String type=Types.textAreaItem;

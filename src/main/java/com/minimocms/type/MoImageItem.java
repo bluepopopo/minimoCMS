@@ -9,23 +9,20 @@ import java.util.Map;
 
 import static com.minimocms.Minimo.store;
 
-/**
- * Created by MattUpstairs on 28/12/2014.
- */
-public class MoFileItem extends MoItem {
+public class MoImageItem extends MoItem {
     String fileId = "";
-    String type = Types.fileItem;
+    String type = Types.imageItem;
 
 
-    public MoFileItem(String name) {
+    public MoImageItem(String name) {
         super(name);
     }
 
-    public MoFileItem(String name, String label) {
+    public MoImageItem(String name, String label) {
         super(name, label);
     }
 
-    public MoFileItem() {
+    public MoImageItem() {
         super();
     }
 
@@ -54,15 +51,15 @@ public class MoFileItem extends MoItem {
 
 
     @Override
-    public MoFileItem copy() {
-        MoFileItem f = new MoFileItem(name,label);
+    public MoImageItem copy() {
+        MoImageItem f = new MoImageItem(name,label);
         f.fileId=fileId;
         return f;
     }
 
     @Override
-    public MoFileItem copyWithId() {
-        MoFileItem f = new MoFileItem(name,label);
+    public MoImageItem copyWithId() {
+        MoImageItem f = new MoImageItem(name,label);
         f.setId(id());
         f.fileId=fileId;
         return f;
@@ -86,12 +83,12 @@ public class MoFileItem extends MoItem {
 
     @Override
     public String render(String path) {
-        return Velocity.engine.render(new ModelAndView(model(path), "/assets/minimoassets/vms/render/mo-file-item.vm"));
+        return Velocity.engine.render(new ModelAndView(model(path), "/assets/minimoassets/vms/render/mo-image-item.vm"));
     }
 
     @Override
     public String renderMinimal(String path) {
-        return Velocity.engine.render(new ModelAndView(model(path), "/assets/minimoassets/vms/render/mo-file-item-min.vm"));
+        return Velocity.engine.render(new ModelAndView(model(path), "/assets/minimoassets/vms/render/mo-image-item-min.vm"));
     }
 
 

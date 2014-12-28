@@ -8,9 +8,6 @@ import com.minimocms.utils.JsonUtil;
 
 import java.lang.reflect.Type;
 
-/**
- * Created by MattUpstairs on 28/12/2014.
- */
 public class GenericContentDeserializer implements JsonDeserializer<GenericContent> {
     @Override
     public GenericContent deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
@@ -23,8 +20,8 @@ public class GenericContentDeserializer implements JsonDeserializer<GenericConte
                     return JsonUtil.gson().fromJson(jsonElement, MoList.class);
                 case Types.textItem:
                     return JsonUtil.gson().fromJson(jsonElement, MoTextItem.class);
-                case Types.fileItem:
-                    return JsonUtil.gson().fromJson(jsonElement, MoFileItem.class);
+                case Types.imageItem:
+                    return JsonUtil.gson().fromJson(jsonElement, MoImageItem.class);
                 case Types.textAreaItem:
                     return JsonUtil.gson().fromJson(jsonElement, MoTextAreaItem.class);
 

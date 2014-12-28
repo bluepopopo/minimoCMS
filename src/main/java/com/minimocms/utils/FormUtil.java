@@ -8,9 +8,6 @@ import spark.Request;
 
 import java.util.*;
 
-/**
- * Created by MattUpstairs on 29/12/2014.
- */
 public class FormUtil {
 
     Request req;

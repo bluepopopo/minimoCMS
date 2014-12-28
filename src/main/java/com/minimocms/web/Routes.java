@@ -18,9 +18,6 @@ import java.util.Map;
 import static com.minimocms.Minimo.*;
 import static spark.Spark.*;
 
-/**
- * Created by MattUpstairs on 26/12/2014.
- */
 public class Routes implements SparkApplication {
     @Override
     public void init() {

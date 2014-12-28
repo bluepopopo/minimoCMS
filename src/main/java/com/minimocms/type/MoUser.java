@@ -4,9 +4,6 @@ import com.minimocms.utils.IdUtil;
 
 import java.io.Serializable;
 
-/**
- * Created by MattUpstairs on 27/12/2014.
- */
 public class MoUser implements Serializable {
     String username;
     String passHash;

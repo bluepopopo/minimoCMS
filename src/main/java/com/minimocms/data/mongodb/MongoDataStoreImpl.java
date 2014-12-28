@@ -20,9 +20,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * Created by MattUpstairs on 27/12/2014.
- */
 public class MongoDataStoreImpl implements DataStoreInterface {
 
     MongoStore store;

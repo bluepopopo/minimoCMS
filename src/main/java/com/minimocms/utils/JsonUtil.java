@@ -6,9 +6,6 @@ import com.minimocms.type.GenericContent;
 import com.minimocms.type.GenericContentDeserializer;
 import com.minimocms.type.GenericContentSerializer;
 
-/**
- * Created by MattUpstairs on 27/12/2014.
- */
 public class JsonUtil {
     static Gson gson;
     static {

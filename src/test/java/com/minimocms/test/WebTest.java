@@ -7,9 +7,6 @@ import com.minimocms.test.web.TestData;
 
 import static com.minimocms.Minimo.pages;
 
-/**
- * Created by MattUpstairs on 27/12/2014.
- */
 public class WebTest {
 
     public static void main(String args[]){
