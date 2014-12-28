@@ -68,23 +68,26 @@ public class MoPage implements Serializable {
             } else {
                 throw new IllegalArgumentException ("Child - "+listName+" already exists and is not of type MoList");            }
         } else {
-            throw new IllegalArgumentException("No list exists - "+listName+" please use list(String listName, Class<T> t) to create");
-        }
-    }
-
-
-    public <T extends GenericContent> MoList list(String listName, Class<T> t) {
-        if(getChildByName(listName)!=null){
-            if(getChildByName(listName) instanceof MoList){
-                return (MoList)getChildByName(listName);
-            } else {
-                throw new IllegalArgumentException ("Child - "+listName+" already exists and is not of type MoList");            }
-        } else {
+//            throw new IllegalArgumentException("No list exists - "+listName+" please use list(String listName, Class<T> t) to create");
             MoList ls = new MoList(listName);
             children.add(ls);
             return ls;
         }
     }
+
+
+//    public <T extends GenericContent> MoList list(String listName, Class<T> t) {
+//        if(getChildByName(listName)!=null){
+//            if(getChildByName(listName) instanceof MoList){
+//                return (MoList)getChildByName(listName);
+//            } else {
+//                throw new IllegalArgumentException ("Child - "+listName+" already exists and is not of type MoList");            }
+//        } else {
+//            MoList ls = new MoList(listName);
+//            children.add(ls);
+//            return ls;
+//        }
+//    }
 
     private GenericContent getChildByName(String name) {
         for(GenericContent c:children()){

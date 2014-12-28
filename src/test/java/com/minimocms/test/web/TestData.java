@@ -30,7 +30,7 @@ public class TestData {
                     txt -> txt.text("This is a test text"));
         });
 
-        page("home").list("mylist1", MoDoc.class).buildTemplate(new MoDoc("list-template"), doc->{
+        page("home").list("mylist1").buildTemplate(new MoDoc("list-template"), doc->{
             doc.addItem(new MoTextItem("mytext2"),
                     txt -> txt.text("This is a test text"));
             doc.addItem(new MoImageItem("myfile"), it->{
