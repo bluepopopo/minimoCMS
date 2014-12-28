@@ -50,4 +50,13 @@ public abstract class MoItem implements GenericContent, Serializable {
     public void setId(String _id) {
         this._id = _id;
     }
+
+    @Override
+    public void removeChildById(String id) {
+        throw new IllegalArgumentException("Cannot remove child in FileItem:" + id);
+    }
+    @Override
+    public GenericContent getChildById(String id) {
+        throw new IllegalArgumentException("Cannot get child in FileItem:" + id);
+    }
 }

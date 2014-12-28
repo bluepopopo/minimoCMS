@@ -22,7 +22,12 @@ public class GenericContentDeserializer implements JsonDeserializer<GenericConte
                 case Types.list:
                     return JsonUtil.gson().fromJson(jsonElement, MoList.class);
                 case Types.textItem:
-                    return JsonUtil.gson().fromJson(jsonElement, TextItem.class);
+                    return JsonUtil.gson().fromJson(jsonElement, MoTextItem.class);
+                case Types.fileItem:
+                    return JsonUtil.gson().fromJson(jsonElement, MoFileItem.class);
+                case Types.textAreaItem:
+                    return JsonUtil.gson().fromJson(jsonElement, MoTextAreaItem.class);
+
                 default:
                     throw new IllegalStateException("Cannot deserialize - " + jsonElement.getAsJsonObject().get("type").getAsString());
             }

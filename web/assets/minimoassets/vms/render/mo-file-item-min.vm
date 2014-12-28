@@ -1,0 +1,9 @@
+<div class="form-group">
+    <label for="$path">$label</label>
+
+    <input type="hidden" name="img:$path" value="$fileId()"/>
+
+    <img src="$url" class="img-thumbnail" style="margin:10px;max-width:300px;"/>
+
+    <input type="file" name="$path" accept="image/*"  data-filename-placement="inside"/>
+</div>

@@ -1,6 +1,7 @@
 package com.minimocms.web;
 
 import com.minimocms.Minimo;
+import com.minimocms.data.MoId;
 import com.minimocms.type.GenericContent;
 import com.minimocms.type.MoList;
 import com.minimocms.type.MoPage;
@@ -14,8 +15,7 @@ import spark.servlet.SparkApplication;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.minimocms.Minimo.page;
-import static com.minimocms.Minimo.pages;
+import static com.minimocms.Minimo.*;
 import static spark.Spark.*;
 
 /**
@@ -27,6 +27,16 @@ public class Routes implements SparkApplication {
 
         staticFileLocation("/assets"); // Static files
 
+        get("/minimofile/:fileid",(req,resp)->{
+            resp.raw().getOutputStream().write(store().file(new MoId(req.params("fileid"))));
+            return "";
+        });
+
+        get("/mologout",(req,resp)->{
+            req.session().removeAttribute("user");
+            resp.redirect("/");
+            return "";
+        });
         get("/minimo/page/:name", (req, resp) -> {
             Map<String, Object> model = new HashMap<>();
 
@@ -65,20 +75,24 @@ public class Routes implements SparkApplication {
         before("/minimo/*", (req,resp) -> {
             if(req.session().attribute("user")==null) {
                 if(Minimo.store().users().size()>0)
-                    resp.redirect("/login");
+                    resp.redirect("/mologin");
                 else
-                    resp.redirect("/create-user");
+                    resp.redirect("/mo-create-user");
             }
         });
 
-        get("/create-user", (req,resp)->{
+        before("/minimo", (req, resp) -> {
+            resp.redirect("/minimo/dash");
+        });
+
+        get("/mo-create-user", (req,resp)->{
             Map<String, Object> model = new HashMap<>();
             return new ModelAndView(model,"/assets/minimoassets/vms/create-user.vm");
         }, Velocity.engine);
 
-        post("/create-user", (req,resp)->{
+        post("/mo-create-user", (req,resp)->{
             if(Minimo.store().users().size()>0){
-                resp.redirect("/login");
+                resp.redirect("/mologin");
             } else{
                 MoUser user = new MoUser(req.queryParams("username"), PasswordHash.createHash(req.queryParams("password")));
                 Minimo.store().saveUser(user);
@@ -86,9 +100,6 @@ public class Routes implements SparkApplication {
                 resp.redirect("/minimo");
             }
             return "";
-        });
-        before("/minimo", (req, resp) -> {
-            resp.redirect("/minimo/dash");
         });
 
         get("/minimo/dash", (req, resp) -> {
@@ -102,13 +113,13 @@ public class Routes implements SparkApplication {
 
 
 
-        get("/login", (req,resp) -> {
+        get("/mologin", (req,resp) -> {
             Map<String, Object> model = new HashMap<>();
 
             return new ModelAndView(model, "/assets/minimoassets/vms/login.vm");
         }, Velocity.engine);
         
-        post("/login", (req, resp) -> {
+        post("/mologin", (req, resp) -> {
             String username = req.queryParams("username");
             String pass = req.queryParams("password");
 
@@ -121,7 +132,7 @@ public class Routes implements SparkApplication {
             } else {
                 System.out.println("invalid");
                 System.out.println(JsonUtil.toJson(user));
-                resp.redirect("/login");
+                resp.redirect("/mologin");
             }
             return "";
         });

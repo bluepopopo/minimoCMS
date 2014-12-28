@@ -17,5 +17,6 @@
     $it.render("")
 </div>
 #end
-
-    <input type="submit" class="btn btn-default" value="Save"/>
+<div class="col-md-12">
+    <input type="submit" class="btn btn-info" style="" value="Save"/>
+</div>

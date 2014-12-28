@@ -2,10 +2,15 @@ package com.minimocms;
 
 import com.minimocms.data.DataStoreInterface;
 import com.minimocms.type.GenericContent;
+import com.minimocms.type.MoFileItem;
 import com.minimocms.type.MoPage;
+import com.minimocms.utils.FormUtil;
 import com.minimocms.web.Routes;
+import org.apache.commons.fileupload.FileItem;
 import spark.Request;
+import spark.utils.IOUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -63,17 +68,32 @@ public class Minimo {
     public static void save(String name, Request req) {
         MoPage page = page(name);
 
-        req.queryParams().stream().filter(p->p.startsWith("deleted:")==false).forEach(p->{
-            String value = req.queryParams(p);
+
+        FormUtil form = new FormUtil(req);
+        form.parseFormInputs();
+
+        System.out.println("\n\nListing qparams");
+        form.queryParams().forEach(p -> {
+            System.out.println("param:" + p + "=" + form.queryParam(p));
+        });
+        System.out.println("Listing files");
+
+        form.files().forEach(p -> {
+            FileItem f = form.file(p);
+            System.out.println("file:" +p+" "+ f.getFieldName() + " " + f.getContentType() + " " + f.getName());
+        });
+
+        form.queryParams().stream().filter(p->p.startsWith("/")).forEach(p -> {
+            String value = form.queryParam(p);
             List<String> ids = new ArrayList<>(Arrays.asList(p.substring(1).split("/")));
 
             GenericContent c = page.getChildById(ids.get(0));
             ids.remove(0);
             for (String id : ids) {
-                if(c.existsChildById(id))
+                if (c.existsChildById(id))
                     c = c.getChildById(id);
-                else{
-                    throw new IllegalStateException("Something went wrong in creating data, stuck at id:"+c.id());
+                else {
+                    throw new IllegalStateException("Something went wrong in creating data, stuck at id:" + c.id());
                 }
             }
 
@@ -81,8 +101,8 @@ public class Minimo {
 
         });
 
-        req.queryParams().stream().filter(p->p.startsWith("deleted:")).forEach(p->{
-            String value = req.queryParams(p);
+        form.queryParams().stream().filter(p->p.startsWith("deleted:")).forEach(p->{
+            String value = form.queryParam(p);
             if(value.equals("true")) {
                 p = p.substring("deleted:".length());
                 List<String> ids = new ArrayList<>(Arrays.asList(p.substring(1).split("/")));
@@ -95,6 +115,32 @@ public class Minimo {
                 }
                 c.removeChildById(toDelete);
             }
+        });
+
+        form.queryParams().stream().filter(p->p.startsWith("img:")).forEach(p->{
+
+            List<String> ids = new ArrayList<>(Arrays.asList(p.substring("img:".length()+1).split("/")));
+
+            GenericContent c = page.getChildById(ids.get(0));
+            ids.remove(0);
+            for (String id : ids) {
+                if(c.existsChildById(id))
+                    c = c.getChildById(id);
+                else{
+                    throw new IllegalStateException("Something went wrong in creating data, stuck at id:"+c.id());
+                }
+            }
+
+            MoFileItem f = (MoFileItem)c;
+
+            if(form.files().contains(p.substring("img:".length()))) {
+                try {
+                    f.file(IOUtils.toByteArray(form.file(p.substring("img:".length())).getInputStream()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
         });
 
         persist();

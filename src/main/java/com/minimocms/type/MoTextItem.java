@@ -9,32 +9,15 @@ import java.util.Map;
 /**
  * Created by MattUpstairs on 27/12/2014.
  */
-public class TextItem extends MoItem {
+public class MoTextItem extends MoItem {
     String text="";
     String type=Types.textItem;
 
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    //    String label="";
-    public TextItem(){super();}
-    public TextItem(String name) {
+    public MoTextItem(){super();}
+    public MoTextItem(String name) {
         super(name);
     }
-    public TextItem(String name,String label) {
+    public MoTextItem(String name, String label) {
         super(name,label);
     }
 
@@ -52,17 +35,16 @@ public class TextItem extends MoItem {
         return name();
     }
 
-
-
     @Override
-    public TextItem copy() {
-        TextItem t = new TextItem(name(),label());
+    public MoTextItem copy() {
+        MoTextItem t = new MoTextItem(name(),label());
         t.text=text();
         return t;
     }
+
     @Override
-    public TextItem copyWithId() {
-        TextItem t = new TextItem(name(),label());
+    public MoTextItem copyWithId() {
+        MoTextItem t = new MoTextItem(name(),label());
         t.text=text();
         t.setId(id());
         return t;
@@ -74,7 +56,6 @@ public class TextItem extends MoItem {
     }
 
     private Map model(String path){
-
         Map<String, Object> model = new HashMap<>();
         model.put("label",name());
         model.put("path",path+"/"+id());
@@ -98,20 +79,8 @@ public class TextItem extends MoItem {
         return type;
     }
 
-
-    public GenericContent getOrCreateChildById(String id) {
-        throw new IllegalArgumentException("Cannot get child in TextItem:"+id);
-    }
-
-    public GenericContent getChildById(String id) {
-        throw new IllegalArgumentException("Cannot get child in TextItem:"+id);
-    }
-
     public void setValue(String value) {
         this.text=value;
     }
 
-    public void removeChildById(String id) {
-        throw new IllegalArgumentException("Cannot remove child in TextItem:"+id);
-    }
 }

@@ -34,7 +34,7 @@
         <!-- Main content -->
         <section class="content">
 
-        <form action="/login" method="POST">
+        <form action="/mologin" method="POST">
             <input type="text" name="username"/>
             <input type="password" name="password"/>
             <input type="submit" value="Login"/>

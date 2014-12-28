@@ -18,7 +18,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('#logoutbtn').click(function(){
-            window.location.href="/logout";
+            window.location.href="/mologout";
         });
     });
 </script>

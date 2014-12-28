@@ -27,6 +27,7 @@ public class MongoDataStoreImpl implements DataStoreInterface {
 
     MongoStore store;
     public MongoDataStoreImpl(String dbName){
+        dbName="minimo-"+dbName;
         store = new MongoStore(dbName);
     }
 

@@ -101,6 +101,7 @@ public class MoDoc implements GenericContent, Serializable {
 
     public <T extends MoItem> void addItem(T i, Builder<T> b) {
         b.build(i);
+        System.out.println("name:"+i.name());
         children.add(i);
     }
 

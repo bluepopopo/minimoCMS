@@ -3,7 +3,6 @@ package com.minimocms.test;
 import com.minimocms.data.MoId;
 import com.minimocms.data.mongodb.MongoDataStoreImpl;
 import com.minimocms.test.web.TestData;
-import com.minimocms.test.web.TestStructure;
 import com.minimocms.type.MoPage;
 import com.minimocms.utils.JsonUtil;
 
@@ -14,7 +13,6 @@ public class MongoDataStoreImplTest {
     static MongoDataStoreImpl store = new MongoDataStoreImpl("test");
     public static void main(String args[]){
 
-        TestStructure.create();
         TestData.create();
 
 //        testFile();
