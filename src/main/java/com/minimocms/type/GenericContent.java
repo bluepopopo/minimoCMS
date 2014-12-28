@@ -12,14 +12,14 @@ public interface GenericContent {
     public Collection<GenericContent> children();
     public String id();
     public void setId(String id);
-    public boolean hasChildren();
-    public int nChildren();
     public String render(String path);
     public String renderMinimal(String path);
     public String label();
     public void name(String name);
     public void label(String label);
     public GenericContent copy();
+    public GenericContent copyWithId();
+
     public GenericContent getOrCreateChildById(String id);
     public GenericContent getChildById(String id);
 

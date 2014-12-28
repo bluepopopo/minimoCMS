@@ -18,7 +18,7 @@ public class MoPage implements Serializable {
     String name;
     String _id;
     String type=Types.page;
-    Map<String,GenericContent> children = new HashMap<>();
+    List<GenericContent> children = new ArrayList<>();
 
     public MoPage(){}
 
@@ -37,43 +37,31 @@ public class MoPage implements Serializable {
     }
 
     public Collection<GenericContent> children() {
-        return children.values();
+        return children;
     }
 
     public String id() {
         return _id;
     }
 
-    public int nChildren() {
-        return children.size();
-    }
-
-    public String get_id() {
-        return _id;
-    }
-
-    public void set_id(String _id) {
-        this._id = _id;
-    }
-
     public MoDoc document(String docName) {
-        if(children.containsKey(docName)){
-            if(children.get(docName) instanceof MoDoc){
-                return (MoDoc)children.get(docName);
+        if(childExistsById(docName)){
+            if(getChildByName(docName) instanceof MoDoc){
+                return (MoDoc)getChildByName(docName);
             } else {
                 throw new IllegalArgumentException ("Child - "+docName+" already exists and is not of type MoDoc");
             }
         } else {
             MoDoc doc = new MoDoc(docName);
-            children.put(docName,doc);
+            children.add(doc);
             return doc;
         }
     }
 
     public <T extends GenericContent> MoList list(String listName) {
-        if(children.containsKey(listName)){
-            if(children.get(listName) instanceof MoList){
-                return (MoList)children.get(listName);
+        if(getChildByName(listName)!=null){
+            if(getChildByName(listName) instanceof MoList){
+                return (MoList)getChildByName(listName);
             } else {
                 throw new IllegalArgumentException ("Child - "+listName+" already exists and is not of type MoList");            }
         } else {
@@ -83,16 +71,23 @@ public class MoPage implements Serializable {
 
 
     public <T extends GenericContent> MoList list(String listName, Class<T> t) {
-        if(children.containsKey(listName)){
-            if(children.get(listName) instanceof MoList){
-                return (MoList)children.get(listName);
+        if(getChildByName(listName)!=null){
+            if(getChildByName(listName) instanceof MoList){
+                return (MoList)getChildByName(listName);
             } else {
                 throw new IllegalArgumentException ("Child - "+listName+" already exists and is not of type MoList");            }
         } else {
             MoList ls = new MoList(listName);
-            children.put(listName,ls);
+            children.add(ls);
             return ls;
         }
+    }
+
+    private GenericContent getChildByName(String name) {
+        for(GenericContent c:children()){
+            if(c.name().equals(name))return c;
+        }
+        return null;
     }
 
     public List<MoDoc> documents(){
@@ -133,31 +128,6 @@ public class MoPage implements Serializable {
         return JsonUtil.toJson(this);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Map<String, GenericContent> getChildren() {
-        return children;
-    }
-
-    public void setChildren(Map<String, GenericContent> children) {
-        this.children = children;
-    }
-
     public String findPath(String listid) {
         Stack<Pair<String,GenericContent>> stack = new Stack<>();
         stack.addAll(this.children().stream().map(
@@ -190,9 +160,37 @@ public class MoPage implements Serializable {
         return null;
     }
 
+    public GenericContent getOrCreateChildById(String id) {
+        if(childExistsById(id))return getChildById(id);
+        else throw new IllegalArgumentException("Cannot create child in page:"+id);
+    }
+
     public GenericContent getChildById(String id) {
-        List<GenericContent> cs = children().stream().filter(c->c.id().equals(id)).collect(Collectors.toList());
-        if(cs.size()==1)return cs.get(0);
-        else throw new IllegalArgumentException("No child in page by id:"+id);
+        for(GenericContent c:children)
+            if(c.id().equals(id))return c;
+        throw new IllegalArgumentException("Child not found with id:"+id);
+    }
+
+    public void setValue(String value) {
+        throw new IllegalArgumentException("Should not call setValue() on MoPage");
+    }
+
+    public void removeChildById(String id) {
+        if(childExistsById(id)){
+            Iterator<GenericContent> i = children.iterator();
+            while(i.hasNext()){
+                if(i.next().id().equals(id)){
+                    i.remove();
+                    return;
+                }
+            }
+        }
+    }
+
+    private boolean childExistsById(String id) {
+        for(GenericContent c:children){
+            if(c.id().equals(id))return true;
+        }
+        return false;
     }
 }

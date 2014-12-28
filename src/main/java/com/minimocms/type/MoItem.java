@@ -14,30 +14,6 @@ public abstract class MoItem implements GenericContent, Serializable {
     String label;
     String _id;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public String get_id() {
-        return _id;
-    }
-
-    public void set_id(String _id) {
-        this._id = _id;
-    }
-
     public MoItem(){}
     public MoItem(String name) {
         this(name,name);
@@ -73,14 +49,5 @@ public abstract class MoItem implements GenericContent, Serializable {
     @Override
     public void setId(String _id) {
         this._id = _id;
-    }
-    @Override
-    public boolean hasChildren() {
-        return false;
-    }
-
-    @Override
-    public int nChildren() {
-        throw new UnsupportedOperationException("Cannot call nChildren() on 'Item' type");
     }
 }

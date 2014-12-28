@@ -1,6 +1,7 @@
 package com.minimocms.web;
 
 import com.minimocms.Minimo;
+import com.minimocms.type.GenericContent;
 import com.minimocms.type.MoList;
 import com.minimocms.type.MoPage;
 import com.minimocms.type.MoUser;
@@ -53,9 +54,9 @@ public class Routes implements SparkApplication {
             model.put("pages",pages());
             model.put("id",ls.id());
             model.put("path",path);
-            model.put("c", ls.add());
-
-            Minimo.rollbackPages();
+            GenericContent c = ls.add();
+            model.put("c", c);
+            ls.removeChildById(c.id());
             return new ModelAndView(model,"/minimo/assets/vms/render/mo-list-element.vm");
         },Velocity.engine);
 

@@ -60,7 +60,13 @@ public class TextItem extends MoItem {
         t.text=text();
         return t;
     }
-
+    @Override
+    public TextItem copyWithId() {
+        TextItem t = new TextItem(name(),label());
+        t.text=text();
+        t.setId(id());
+        return t;
+    }
     private Map model(String path){
 
         Map<String, Object> model = new HashMap<>();
@@ -84,5 +90,22 @@ public class TextItem extends MoItem {
     @Override
     public String type() {
         return type;
+    }
+
+
+    public GenericContent getOrCreateChildById(String id) {
+        throw new IllegalArgumentException("Cannot get child in TextItem:"+id);
+    }
+
+    public GenericContent getChildById(String id) {
+        throw new IllegalArgumentException("Cannot get child in TextItem:"+id);
+    }
+
+    public void setValue(String value) {
+        this.text=value;
+    }
+
+    public void removeChildById(String id) {
+        throw new IllegalArgumentException("Cannot remove child in TextItem:"+id);
     }
 }

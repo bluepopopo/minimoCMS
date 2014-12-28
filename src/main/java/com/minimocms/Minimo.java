@@ -6,6 +6,7 @@ import com.minimocms.type.MoPage;
 import com.minimocms.web.Routes;
 import spark.Request;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +32,7 @@ public class Minimo {
             return pages().get(name);
         } else {
             MoPage page = new MoPage(name);
-            store().savePage(page);
-            rollbackPages();
+            pages().put(page.name(),page);
             return page;
         }
     }
@@ -65,22 +65,23 @@ public class Minimo {
 
         req.queryParams().stream().filter(p->p.startsWith("deleted:")==false).forEach(p->{
             String value = req.queryParams(p);
-            List<String> ids = Arrays.asList(p.substring(1).split("/"));
+            List<String> ids = new ArrayList<>(Arrays.asList(p.substring(1).split("/")));
 
-            GenericContent c=page.getChildById(ids.get(0));
+            GenericContent c = page.getChildById(ids.get(0));
             ids.remove(0);
-            for(String id:ids){
-                 c = c.getOrCreateChildById(id);
+            for (String id : ids) {
+                c = c.getOrCreateChildById(id);
             }
 
             c.setValue(value);
+
         });
 
         req.queryParams().stream().filter(p->p.startsWith("deleted:")==false).forEach(p->{
             String value = req.queryParams(p);
             if(value.equals("true")) {
                 p = p.substring("deleted:".length());
-                List<String> ids = Arrays.asList(p.substring(1).split("/"));
+                List<String> ids = new ArrayList<>(Arrays.asList(p.substring(1).split("/")));
                 GenericContent c = page.getChildById(ids.get(0));
                 ids.remove(0);
                 String toDelete = ids.get(ids.size()-1);

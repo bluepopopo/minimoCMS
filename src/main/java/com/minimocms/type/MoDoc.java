@@ -6,10 +6,7 @@ import com.minimocms.utils.Velocity;
 import spark.ModelAndView;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -21,40 +18,7 @@ public class MoDoc implements GenericContent, Serializable {
     String label;
     String _id;
     String type = Types.document;
-    Map<String,GenericContent> children = new HashMap<>();
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Map<String, GenericContent> getChildren() {
-        return children;
-    }
-
-    public void setChildren(Map<String, GenericContent> children) {
-        this.children = children;
-    }
+    List<GenericContent> children = new ArrayList<>();
 
     public MoDoc(){}
     public MoDoc(String name) {
@@ -82,33 +46,14 @@ public class MoDoc implements GenericContent, Serializable {
         return "Document - "+name;
     }
 
-    public String get_id() {
-        return _id;
-    }
-
-    public void set_id(String _id) {
-        this._id = _id;
-    }
-
     @Override
-
     public Collection<GenericContent> children() {
-        return children.values();
+        return children;
     }
 
     @Override
     public String id() {
         return _id;
-    }
-
-    @Override
-    public boolean hasChildren() {
-        return true;
-    }
-
-    @Override
-    public int nChildren() {
-        return children.size();
     }
 
 
@@ -156,7 +101,7 @@ public class MoDoc implements GenericContent, Serializable {
 
     public <T extends MoItem> void addItem(T i, Builder<T> b) {
         b.build(i);
-        children.put(i.name(),i);
+        children.add(i);
     }
 
     public List<MoDoc> documents(){
@@ -186,8 +131,53 @@ public class MoDoc implements GenericContent, Serializable {
     public MoDoc copy(){
         MoDoc d = new MoDoc(this.name,this.label);
         children().forEach(c->{
-            d.children.put(c.name(),c.copy());
+            d.children.add(c.copy());
         });
         return d;
+    }
+    public MoDoc copyWithId(){
+        MoDoc d = new MoDoc(this.name,this.label);
+        d.setId(id());
+        children().forEach(c->{
+            d.children.add(c.copy());
+        });
+        return d;
+    }
+    @Override
+    public GenericContent getOrCreateChildById(String id) {
+        if(childExistsById(id))return getChildById(id);
+        else throw new IllegalArgumentException("Cannot create child in doc:"+id);
+    }
+
+    @Override
+    public GenericContent getChildById(String id) {
+        for(GenericContent c:children)
+            if(c.id().equals(id))return c;
+        throw new IllegalArgumentException("Child not found with id:"+id);
+    }
+
+    @Override
+    public void setValue(String value) {
+        throw new IllegalArgumentException("Should not call setValue() on MoDoc");
+    }
+
+    @Override
+    public void removeChildById(String id) {
+        if(childExistsById(id)){
+            Iterator<GenericContent> i = children.iterator();
+            while(i.hasNext()){
+                if(i.next().id().equals(id)){
+                    i.remove();
+                    return;
+                }
+            }
+        }
+    }
+
+    private boolean childExistsById(String id) {
+        for(GenericContent c:children){
+            if(c.id().equals(id))return true;
+        }
+        return false;
     }
 }
