@@ -1,0 +1,4 @@
+
+        #foreach($c in $children)
+                $c.renderMinimal("$path")
+            #end
