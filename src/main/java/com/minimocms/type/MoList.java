@@ -108,11 +108,6 @@ public class MoList  implements GenericContent, Serializable {
         });
         return ls;
     }
-    @Override
-    public GenericContent getOrCreateChildById(String id) {
-        if(childExistsById(id))return getChildById(id);
-        else return add(id);
-    }
 
     @Override
     public GenericContent getChildById(String id) {
@@ -134,12 +129,12 @@ public class MoList  implements GenericContent, Serializable {
     }
 
     public GenericContent add() {
-        GenericContent item = itemTemplate.copyWithId();
+        GenericContent item = itemTemplate.copy();
         children.add(item);
         return item;
     }
     public GenericContent add(String id) {
-        GenericContent item = itemTemplate.copyWithId();
+        GenericContent item = itemTemplate.copy();
         item.setId(id);
         children.add(item);
         return item;
@@ -148,7 +143,7 @@ public class MoList  implements GenericContent, Serializable {
 
     @Override
     public void removeChildById(String id) {
-        if(childExistsById(id)){
+        if(existsChildById(id)){
             Iterator<GenericContent> i = children.iterator();
             while(i.hasNext()){
                 if(i.next().id().equals(id)){
@@ -159,7 +154,8 @@ public class MoList  implements GenericContent, Serializable {
         }
     }
 
-    private boolean childExistsById(String id) {
+    @Override
+    public boolean existsChildById(String id) {
         for(GenericContent c:children){
             if(c.id().equals(id))return true;
         }

@@ -44,9 +44,9 @@
                     });
                 }
 
-                function deleteListElement(elementId,listId){
+                function deleteListElement(elpath,elementId,listId){
                     $('#wrapper-'+elementId).remove();
-                    $('#accordion-'+listId).append("<input type='hidden' name='deleted:"+elementId+"' value='true' />");
+                    $('#accordion-'+listId).append("<input type='hidden' name='deleted:"+elpath+"/"+elementId+"' value='true' />");
                 }
             </script>
             <form action="/minimo/page/$page.name()" method="POST">

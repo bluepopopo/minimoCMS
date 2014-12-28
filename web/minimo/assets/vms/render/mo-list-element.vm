@@ -5,7 +5,7 @@
                 $c.label()
             </a>
         </h4>
-        <div class="btn btn-default" style="margin:5px" onClick="deleteListElement('$c.id()','$id')">Delete</div>
+        <div class="btn btn-default" style="margin:5px" onClick="deleteListElement('$path','$c.id()','$id')">Delete</div>
     </div>
     <div id="collapse-$c.id()" class="panel-collapse collapse">
         <div class="box-body">

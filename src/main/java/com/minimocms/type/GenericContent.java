@@ -20,7 +20,7 @@ public interface GenericContent {
     public GenericContent copy();
     public GenericContent copyWithId();
 
-    public GenericContent getOrCreateChildById(String id);
+    public boolean existsChildById(String id);
     public GenericContent getChildById(String id);
 
     public void setValue(String value);

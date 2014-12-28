@@ -45,7 +45,7 @@ public class MoPage implements Serializable {
     }
 
     public MoDoc document(String docName) {
-        if(childExistsById(docName)){
+        if(existsChildById(docName)){
             if(getChildByName(docName) instanceof MoDoc){
                 return (MoDoc)getChildByName(docName);
             } else {
@@ -161,7 +161,7 @@ public class MoPage implements Serializable {
     }
 
     public GenericContent getOrCreateChildById(String id) {
-        if(childExistsById(id))return getChildById(id);
+        if(existsChildById(id))return getChildById(id);
         else throw new IllegalArgumentException("Cannot create child in page:"+id);
     }
 
@@ -176,7 +176,7 @@ public class MoPage implements Serializable {
     }
 
     public void removeChildById(String id) {
-        if(childExistsById(id)){
+        if(existsChildById(id)){
             Iterator<GenericContent> i = children.iterator();
             while(i.hasNext()){
                 if(i.next().id().equals(id)){
@@ -187,7 +187,7 @@ public class MoPage implements Serializable {
         }
     }
 
-    private boolean childExistsById(String id) {
+    private boolean existsChildById(String id) {
         for(GenericContent c:children){
             if(c.id().equals(id))return true;
         }

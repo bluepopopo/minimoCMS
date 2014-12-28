@@ -56,7 +56,9 @@ public class Routes implements SparkApplication {
             model.put("path",path);
             GenericContent c = ls.add();
             model.put("c", c);
-            ls.removeChildById(c.id());
+
+            Minimo.persist();
+
             return new ModelAndView(model,"/minimo/assets/vms/render/mo-list-element.vm");
         },Velocity.engine);
 

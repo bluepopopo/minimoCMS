@@ -67,6 +67,12 @@ public class TextItem extends MoItem {
         t.setId(id());
         return t;
     }
+
+    @Override
+    public boolean existsChildById(String id) {
+        return false;
+    }
+
     private Map model(String path){
 
         Map<String, Object> model = new HashMap<>();

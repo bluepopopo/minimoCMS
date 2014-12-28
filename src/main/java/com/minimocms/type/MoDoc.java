@@ -143,11 +143,6 @@ public class MoDoc implements GenericContent, Serializable {
         });
         return d;
     }
-    @Override
-    public GenericContent getOrCreateChildById(String id) {
-        if(childExistsById(id))return getChildById(id);
-        else throw new IllegalArgumentException("Cannot create child in doc:"+id);
-    }
 
     @Override
     public GenericContent getChildById(String id) {
@@ -163,7 +158,7 @@ public class MoDoc implements GenericContent, Serializable {
 
     @Override
     public void removeChildById(String id) {
-        if(childExistsById(id)){
+        if(existsChildById(id)){
             Iterator<GenericContent> i = children.iterator();
             while(i.hasNext()){
                 if(i.next().id().equals(id)){
@@ -174,7 +169,8 @@ public class MoDoc implements GenericContent, Serializable {
         }
     }
 
-    private boolean childExistsById(String id) {
+    @Override
+    public boolean existsChildById(String id) {
         for(GenericContent c:children){
             if(c.id().equals(id))return true;
         }

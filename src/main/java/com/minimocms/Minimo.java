@@ -5,6 +5,7 @@ import com.minimocms.type.GenericContent;
 import com.minimocms.type.MoPage;
 import com.minimocms.web.Routes;
 import spark.Request;
+import sun.plugin.dom.exception.InvalidStateException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +33,7 @@ public class Minimo {
             return pages().get(name);
         } else {
             MoPage page = new MoPage(name);
-            pages().put(page.name(),page);
+            pages().put(page.name(), page);
             return page;
         }
     }
@@ -70,14 +71,18 @@ public class Minimo {
             GenericContent c = page.getChildById(ids.get(0));
             ids.remove(0);
             for (String id : ids) {
-                c = c.getOrCreateChildById(id);
+                if(c.existsChildById(id))
+                    c = c.getChildById(id);
+                else{
+                    throw new InvalidStateException("Something went wrong in creating data, stuck at id:"+c.id());
+                }
             }
 
             c.setValue(value);
 
         });
 
-        req.queryParams().stream().filter(p->p.startsWith("deleted:")==false).forEach(p->{
+        req.queryParams().stream().filter(p->p.startsWith("deleted:")).forEach(p->{
             String value = req.queryParams(p);
             if(value.equals("true")) {
                 p = p.substring("deleted:".length());
