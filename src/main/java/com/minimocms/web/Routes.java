@@ -25,7 +25,7 @@ public class Routes implements SparkApplication {
     @Override
     public void init() {
 
-        staticFileLocation("/minimo"); // Static files
+        staticFileLocation("/assets"); // Static files
 
         get("/minimo/page/:name", (req, resp) -> {
             Map<String, Object> model = new HashMap<>();
@@ -33,7 +33,7 @@ public class Routes implements SparkApplication {
             model.put("pages",pages());
             model.put("page",page(req.params("name")));
 
-            return new ModelAndView(model, "/minimo/assets/vms/page.vm");
+            return new ModelAndView(model, "/assets/minimoassets/vms/page.vm");
         }, Velocity.engine);
 
         post("/minimo/page/:name", (req, resp) -> {
@@ -59,7 +59,7 @@ public class Routes implements SparkApplication {
 
             Minimo.persist();
 
-            return new ModelAndView(model,"/minimo/assets/vms/render/mo-list-element.vm");
+            return new ModelAndView(model,"/assets/minimoassets/vms/render/mo-list-element.vm");
         },Velocity.engine);
 
         before("/minimo/*", (req,resp) -> {
@@ -73,7 +73,7 @@ public class Routes implements SparkApplication {
 
         get("/create-user", (req,resp)->{
             Map<String, Object> model = new HashMap<>();
-            return new ModelAndView(model,"/minimo/assets/vms/create-user.vm");
+            return new ModelAndView(model,"/assets/minimoassets/vms/create-user.vm");
         }, Velocity.engine);
 
         post("/create-user", (req,resp)->{
@@ -96,7 +96,7 @@ public class Routes implements SparkApplication {
 
             model.put("pages",pages());
 
-            return new ModelAndView(model, "/minimo/assets/vms/index.vm");
+            return new ModelAndView(model, "/assets/minimoassets/vms/index.vm");
         }, Velocity.engine);
 
 
@@ -105,7 +105,7 @@ public class Routes implements SparkApplication {
         get("/login", (req,resp) -> {
             Map<String, Object> model = new HashMap<>();
 
-            return new ModelAndView(model, "/minimo/assets/vms/login.vm");
+            return new ModelAndView(model, "/assets/minimoassets/vms/login.vm");
         }, Velocity.engine);
         
         post("/login", (req, resp) -> {

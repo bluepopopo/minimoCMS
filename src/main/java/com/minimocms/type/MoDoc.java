@@ -68,12 +68,12 @@ public class MoDoc implements GenericContent, Serializable {
 
     @Override
     public String render(String path) {
-        return Velocity.engine.render(new ModelAndView(model(path),"/minimo/assets/vms/render/mo-doc.vm"));
+        return Velocity.engine.render(new ModelAndView(model(path),"/assets/minimo/vms/render/mo-doc.vm"));
     }
 
     @Override
     public String renderMinimal(String path) {
-        return Velocity.engine.render(new ModelAndView(model(path),"/minimo/assets/vms/render/mo-doc-min.vm"));
+        return Velocity.engine.render(new ModelAndView(model(path),"/assets/minimo/vms/render/mo-doc-min.vm"));
     }
 
     @Override
@@ -149,6 +149,17 @@ public class MoDoc implements GenericContent, Serializable {
         for(GenericContent c:children)
             if(c.id().equals(id))return c;
         throw new IllegalArgumentException("Child not found with id:"+id);
+    }
+
+    public GenericContent get(String name){
+        return getChildByName(name);
+    }
+
+    private GenericContent getChildByName(String name) {
+        for(GenericContent c:children)
+            if(c.name().equals(name))
+                return c;
+        return null;
     }
 
     @Override

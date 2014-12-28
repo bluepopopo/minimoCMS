@@ -1,4 +1,0 @@
-<div class="form-group">
-    <label for="$path">$label</label>
-    <input type="text" name="$path" class="form-control" value="$text"/>
-</div>

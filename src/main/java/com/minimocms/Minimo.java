@@ -5,7 +5,6 @@ import com.minimocms.type.GenericContent;
 import com.minimocms.type.MoPage;
 import com.minimocms.web.Routes;
 import spark.Request;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,7 +73,7 @@ public class Minimo {
                 if(c.existsChildById(id))
                     c = c.getChildById(id);
                 else{
-                    throw new InvalidStateException("Something went wrong in creating data, stuck at id:"+c.id());
+                    throw new IllegalStateException("Something went wrong in creating data, stuck at id:"+c.id());
                 }
             }
 
@@ -97,6 +96,8 @@ public class Minimo {
                 c.removeChildById(toDelete);
             }
         });
+
+        persist();
     }
 
 

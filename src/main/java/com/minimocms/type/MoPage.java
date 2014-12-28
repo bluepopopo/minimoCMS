@@ -45,7 +45,7 @@ public class MoPage implements Serializable {
     }
 
     public MoDoc document(String docName) {
-        if(existsChildById(docName)){
+        if(existsChildByName(docName)){
             if(getChildByName(docName) instanceof MoDoc){
                 return (MoDoc)getChildByName(docName);
             } else {
@@ -56,6 +56,12 @@ public class MoPage implements Serializable {
             children.add(doc);
             return doc;
         }
+    }
+
+    public boolean existsChildByName(String docName) {
+        for(GenericContent c:children)
+            if(c.name().equals(docName))return true;
+        return false;
     }
 
     public <T extends GenericContent> MoList list(String listName) {
@@ -120,7 +126,7 @@ public class MoPage implements Serializable {
         model.put("lists",lists());
         model.put("items",items());
 
-        return Velocity.engine.render(new ModelAndView(model, "/minimo/assets/vms/render/mo-page.vm"));
+        return Velocity.engine.render(new ModelAndView(model, "/assets/minimo/vms/render/mo-page.vm"));
     }
 
     @Override
