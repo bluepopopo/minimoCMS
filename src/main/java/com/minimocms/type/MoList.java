@@ -134,6 +134,14 @@ public class MoList  implements GenericContent, Serializable {
         return item;
     }
 
+    public List<GenericContent> add(int n) {
+        List<GenericContent> ls = new ArrayList<>();
+        for(int i = 0; i<n;i++){
+            ls.add(add());
+        }
+        return ls;
+    }
+
     public GenericContent add(Builder<GenericContent> b) {
         GenericContent item = itemTemplate.copy();
         b.build(item);

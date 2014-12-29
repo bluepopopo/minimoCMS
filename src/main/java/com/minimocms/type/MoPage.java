@@ -1,9 +1,6 @@
 package com.minimocms.type;
 
-import com.minimocms.utils.IdUtil;
-import com.minimocms.utils.JsonUtil;
-import com.minimocms.utils.Pair;
-import com.minimocms.utils.Velocity;
+import com.minimocms.utils.*;
 import spark.ModelAndView;
 
 import java.io.Serializable;
@@ -75,6 +72,15 @@ public class MoPage implements Serializable {
         }
     }
 
+
+    public <T extends MoItem> void addItem(T i, Builder<T> b) {
+        b.build(i);
+        children.add(i);
+    }
+
+    public <T extends MoItem> void addItem(T i) {
+        children.add(i);
+    }
 
 //    public <T extends GenericContent> MoList list(String listName, Class<T> t) {
 //        if(getChildByName(listName)!=null){

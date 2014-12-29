@@ -9,6 +9,12 @@
     </div>
     <div id="collapse-$c.id()" class="panel-collapse collapse">
         <div class="box-body">
+
+            <div class="form-group">
+                <label for="name:$path/$c.id()">List element label</label>
+                <input type="text" name="name:$path/$c.id()" class="form-control" value="$c.name()"/>
+            </div>
+
             $c.renderMinimal("$path")
         </div>
     </div>

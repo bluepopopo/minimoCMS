@@ -21,7 +21,7 @@ public class Minimo {
     public DataStoreInterface store;
     String siteName;
 
-    Map<String,MoPage> pages;
+    Map<String,Map<String,MoPage>> sessionPages;
 
     static Minimo minimo = new Minimo();
     public static Minimo instance(){
@@ -67,9 +67,26 @@ public class Minimo {
         instance().rollbackPages();
     }
 
+    public static GenericContent findById(MoPage page, List<String> ids){
+        GenericContent c = page.getChildById(ids.get(0));
+        ids.remove(0);
+        for (String id : ids) {
+            if (c.existsChildById(id))
+                c = c.getChildById(id);
+            else {
+                throw new IllegalStateException("Something went wrong in creating data, stuck at id:" + c.id());
+            }
+        }
+        return c;
+    }
+
+    public static GenericContent findById(MoPage page, String path){
+        List<String> ids = new ArrayList<>(Arrays.asList(path.substring(1).split("/")));
+        return findById(page,ids);
+    }
+
     public static void save(String name, Request req) {
         MoPage page = page(name);
-
 
         FormUtil form = new FormUtil(req);
         form.parseFormInputs();
@@ -87,20 +104,8 @@ public class Minimo {
 
         form.queryParams().stream().filter(p->p.startsWith("/")).forEach(p -> {
             String value = form.queryParam(p);
-            List<String> ids = new ArrayList<>(Arrays.asList(p.substring(1).split("/")));
-
-            GenericContent c = page.getChildById(ids.get(0));
-            ids.remove(0);
-            for (String id : ids) {
-                if (c.existsChildById(id))
-                    c = c.getChildById(id);
-                else {
-                    throw new IllegalStateException("Something went wrong in creating data, stuck at id:" + c.id());
-                }
-            }
-
+            GenericContent c = findById(page,p);
             c.setValue(value);
-
         });
 
         form.queryParams().stream().filter(p->p.startsWith("deleted:")).forEach(p->{
@@ -108,33 +113,16 @@ public class Minimo {
             if(value.equals("true")) {
                 p = p.substring("deleted:".length());
                 List<String> ids = new ArrayList<>(Arrays.asList(p.substring(1).split("/")));
-                GenericContent c = page.getChildById(ids.get(0));
-                ids.remove(0);
                 String toDelete = ids.get(ids.size()-1);
                 ids.remove(ids.size()-1);
-                for (String id : ids) {
-                    c = c.getChildById(id);
-                }
+                GenericContent c = findById(page,ids);
                 c.removeChildById(toDelete);
             }
         });
 
         form.queryParams().stream().filter(p->p.startsWith("img:")).forEach(p->{
-
-            List<String> ids = new ArrayList<>(Arrays.asList(p.substring("img:".length()+1).split("/")));
-
-            GenericContent c = page.getChildById(ids.get(0));
-            ids.remove(0);
-            for (String id : ids) {
-                if(c.existsChildById(id))
-                    c = c.getChildById(id);
-                else{
-                    throw new IllegalStateException("Something went wrong in creating data, stuck at id:"+c.id());
-                }
-            }
-
+            GenericContent c = findById(page,p.substring("img:".length()));
             MoImageItem f = (MoImageItem)c;
-
             if(form.files().contains(p.substring("img:".length()))) {
                 try {
                     f.file(IOUtils.toByteArray(form.file(p.substring("img:".length())).getInputStream()));
@@ -142,7 +130,12 @@ public class Minimo {
                     e.printStackTrace();
                 }
             }
+        });
 
+        form.queryParams().stream().filter(p->p.startsWith("name:")).forEach(p -> {
+            GenericContent c = findById(page,p.substring("name:".length()));
+            String value = form.queryParam(p);
+            c.name(value);
         });
 
         persist();
