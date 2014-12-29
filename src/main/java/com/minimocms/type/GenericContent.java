@@ -11,9 +11,7 @@ public interface GenericContent {
     public void setId(String id);
     public String render(String path);
     public String renderMinimal(String path);
-    public String label();
     public void name(String name);
-    public void label(String label);
     public GenericContent copy();
     public GenericContent copyWithId();
 

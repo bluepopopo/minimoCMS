@@ -57,7 +57,7 @@ public class MoList  implements GenericContent, Serializable {
     private Map<String, Object> model(String path){
 
         Map<String, Object> model = new HashMap<>();
-        model.put("label",label());
+        model.put("label",name());
         model.put("path",path+"/"+id());
 
         model.put("id",id());
@@ -74,19 +74,10 @@ public class MoList  implements GenericContent, Serializable {
         return Velocity.engine.render(new ModelAndView(model(path),"/assets/minimoassets/vms/render/mo-list-min.vm"));
     }
     @Override
-    public String label() {
-        return label;
-    }
-
-    @Override
     public void name(String name) {
         this.name=name;
     }
 
-    @Override
-    public void label(String label) {
-        this.label=label;
-    }
 
     @Override
     public MoList copy() {
@@ -142,6 +133,15 @@ public class MoList  implements GenericContent, Serializable {
         children.add(item);
         return item;
     }
+
+    public GenericContent add(Builder<GenericContent> b) {
+        GenericContent item = itemTemplate.copy();
+        b.build(item);
+        children.add(item);
+        return item;
+    }
+
+
     public GenericContent add(String id) {
         GenericContent item = itemTemplate.copy();
         item.setId(id);

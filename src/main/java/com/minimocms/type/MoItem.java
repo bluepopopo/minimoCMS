@@ -8,16 +8,11 @@ import java.util.Collection;
 
 public abstract class MoItem implements GenericContent, Serializable {
     String name;
-    String label;
     String _id;
 
     public MoItem(){}
-    public MoItem(String name) {
-        this(name,name);
-    }
-    protected MoItem(String name, String label) {
+    protected MoItem(String name) {
         this.name = name;
-        this.label = label;
         _id = IdUtil.createId();
     }
     @Override
@@ -25,10 +20,6 @@ public abstract class MoItem implements GenericContent, Serializable {
         this.name=name;
     }
 
-    @Override
-    public void label(String label) {
-        this.label=label;
-    }
     @Override
     public String name() {
         return name;

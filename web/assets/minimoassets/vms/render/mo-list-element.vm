@@ -2,7 +2,7 @@
     <div class="box-header">
         <h4 class="box-title">
             <a data-toggle="collapse" data-parent="#accordion-$id" href="#collapse-$c.id()">
-                $c.label()
+                $c.name()
             </a>
         </h4>
         <div class="btn btn-default" style="margin:5px" onClick="deleteListElement('$path','$c.id()','$id')">Delete</div>

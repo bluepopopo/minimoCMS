@@ -14,9 +14,6 @@ public class MoTextItem extends MoItem {
     public MoTextItem(String name) {
         super(name);
     }
-    public MoTextItem(String name, String label) {
-        super(name,label);
-    }
 
     public void text(String t){
         text=t;
@@ -27,21 +24,17 @@ public class MoTextItem extends MoItem {
         return text;
     }
 
-    @Override
-    public String label() {
-        return name();
-    }
 
     @Override
     public MoTextItem copy() {
-        MoTextItem t = new MoTextItem(name(),label());
+        MoTextItem t = new MoTextItem(name());
         t.text=text();
         return t;
     }
 
     @Override
     public MoTextItem copyWithId() {
-        MoTextItem t = new MoTextItem(name(),label());
+        MoTextItem t = new MoTextItem(name());
         t.text=text();
         t.setId(id());
         return t;

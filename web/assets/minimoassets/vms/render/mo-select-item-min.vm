@@ -1,0 +1,8 @@
+<div class="form-group">
+    <label for="$path">$label</label>
+    <select name="$path">
+        #foreach($opt in $options)
+        <option name="$opt.first()" value="$opt.first()"  #if($opt.first().equals($option))selected#end   >$opt.second()</option>
+        #end
+    </select>
+</div>

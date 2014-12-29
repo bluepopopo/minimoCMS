@@ -22,6 +22,13 @@ public class Pair<F, S> {
         this.second = second;
     }
 
+    public F first(){
+        return first;
+    }
+    public S second(){
+        return second;
+    }
+
     /**
      * Checks the two objects for equality by delegating to their respective
      * {@link Object#equals(Object)} methods.

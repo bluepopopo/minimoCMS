@@ -1,7 +1,6 @@
 package com.minimocms.utils;
 
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import spark.Request;
@@ -25,7 +24,7 @@ public class FormUtil {
             List<FileItem> items = null;
             try {
                 items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(req.raw());
-            } catch (FileUploadException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return;
             }

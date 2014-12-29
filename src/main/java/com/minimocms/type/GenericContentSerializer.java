@@ -21,6 +21,9 @@ public class GenericContentSerializer implements JsonSerializer<GenericContent>{
                     return JsonUtil.gson().toJsonTree(genericContent, MoImageItem.class);
                 case Types.textAreaItem:
                     return JsonUtil.gson().toJsonTree(genericContent, MoTextAreaItem.class);
+                case Types.selectItem:
+                    return JsonUtil.gson().toJsonTree(genericContent, MoSelectItem.class);
+
                 default:
                     throw new IllegalStateException("Cannot serialize - " + genericContent.name());
             }

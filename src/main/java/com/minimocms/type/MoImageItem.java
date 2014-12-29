@@ -18,10 +18,6 @@ public class MoImageItem extends MoItem {
         super(name);
     }
 
-    public MoImageItem(String name, String label) {
-        super(name, label);
-    }
-
     public MoImageItem() {
         super();
     }
@@ -44,22 +40,18 @@ public class MoImageItem extends MoItem {
         return fileId;
     }
 
-    @Override
-    public String label() {
-        return name();
-    }
 
 
     @Override
     public MoImageItem copy() {
-        MoImageItem f = new MoImageItem(name,label);
+        MoImageItem f = new MoImageItem(name);
         f.fileId=fileId;
         return f;
     }
 
     @Override
     public MoImageItem copyWithId() {
-        MoImageItem f = new MoImageItem(name,label);
+        MoImageItem f = new MoImageItem(name);
         f.setId(id());
         f.fileId=fileId;
         return f;

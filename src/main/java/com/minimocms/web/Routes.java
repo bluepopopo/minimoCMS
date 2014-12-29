@@ -75,6 +75,7 @@ public class Routes implements SparkApplication {
                     resp.redirect("/mologin");
                 else
                     resp.redirect("/mo-create-user");
+                halt();
             }
         });
 

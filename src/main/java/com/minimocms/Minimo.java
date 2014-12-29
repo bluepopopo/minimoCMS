@@ -61,6 +61,12 @@ public class Minimo {
         new Routes().init();
     }
 
+    public static void initClientOnly(String siteName, DataStoreInterface store){
+        instance().store = store;
+        instance().siteName=siteName;
+        instance().rollbackPages();
+    }
+
     public static void save(String name, Request req) {
         MoPage page = page(name);
 

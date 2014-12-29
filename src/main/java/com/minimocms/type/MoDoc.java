@@ -12,19 +12,13 @@ import java.util.stream.Collectors;
 public class MoDoc implements GenericContent, Serializable {
 
     String name;
-    String label;
     String _id;
     String type = Types.document;
     List<GenericContent> children = new ArrayList<>();
 
     public MoDoc(){}
     public MoDoc(String name) {
-        this(name,name);
-    }
-
-    public MoDoc(String name, String label) {
         this.name = name;
-        this.label = label;
         _id = IdUtil.createId();
     }
 
@@ -53,11 +47,23 @@ public class MoDoc implements GenericContent, Serializable {
         return _id;
     }
 
-
+    public <T extends GenericContent> MoList list(String listName) {
+        if(getChildByName(listName)!=null){
+            if(getChildByName(listName) instanceof MoList){
+                return (MoList)getChildByName(listName);
+            } else {
+                throw new IllegalArgumentException ("Child - "+listName+" already exists and is not of type MoList");            }
+        } else {
+//            throw new IllegalArgumentException("No list exists - "+listName+" please use list(String listName, Class<T> t) to create");
+            MoList ls = new MoList(listName);
+            children.add(ls);
+            return ls;
+        }
+    }
     private Map model(String path){
 
         Map<String, Object> model = new HashMap<>();
-        model.put("label",label());
+        model.put("label",name());
         model.put("path",path+"/"+id());
         model.put("children",children());
         return model;
@@ -74,11 +80,6 @@ public class MoDoc implements GenericContent, Serializable {
     }
 
     @Override
-    public String label() {
-        return label;
-    }
-
-    @Override
     public void name(String name) {
         this.name=name;
     }
@@ -87,10 +88,6 @@ public class MoDoc implements GenericContent, Serializable {
         this._id = _id;
     }
 
-    @Override
-    public void label(String label) {
-        this.label=label;
-    }
 
     public void build(Builder<MoDoc> b) {
         b.build(this);
@@ -98,6 +95,10 @@ public class MoDoc implements GenericContent, Serializable {
 
     public <T extends MoItem> void addItem(T i, Builder<T> b) {
         b.build(i);
+        children.add(i);
+    }
+
+    public <T extends MoItem> void addItem(T i) {
         children.add(i);
     }
 
@@ -126,14 +127,14 @@ public class MoDoc implements GenericContent, Serializable {
     }
 
     public MoDoc copy(){
-        MoDoc d = new MoDoc(this.name,this.label);
+        MoDoc d = new MoDoc(this.name);
         children().forEach(c->{
             d.children.add(c.copy());
         });
         return d;
     }
     public MoDoc copyWithId(){
-        MoDoc d = new MoDoc(this.name,this.label);
+        MoDoc d = new MoDoc(this.name);
         d.setId(id());
         children().forEach(c->{
             d.children.add(c.copy());
