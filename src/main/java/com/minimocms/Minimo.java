@@ -1,27 +1,24 @@
 package com.minimocms;
 
 import com.minimocms.data.DataStoreInterface;
+import com.minimocms.data.MoId;
 import com.minimocms.type.GenericContent;
 import com.minimocms.type.MoImageItem;
 import com.minimocms.type.MoPage;
+import com.minimocms.type.MoUser;
 import com.minimocms.utils.FormUtil;
 import com.minimocms.web.Routes;
 import spark.Request;
 import spark.utils.IOUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class Minimo {
 
     public DataStoreInterface store;
     String siteName;
 
-    Map<String,Map<String,MoPage>> sessionPages;
 
     static Minimo minimo = new Minimo();
     public static Minimo instance(){
@@ -29,25 +26,49 @@ public class Minimo {
     }
 
     public static MoPage page(String name){
-        if(pages().containsKey(name)){
-            return pages().get(name);
-        } else {
-            MoPage page = new MoPage(name);
-            pages().put(page.name(), page);
-            return page;
-        }
+        return store().page(name);
     }
 
-    public static void persist(){
-        store().savePages(pages().values());
+    public static MoPage page(Request req,String name){
+        return store().page(req, name);
     }
 
-    public static Map<String,MoPage> pages(){
-        return instance().pages;
+    public static void persistUser(MoUser user){
+        store().persistUser(user);
+    }
+
+    public static void persistPages(){
+        store().persistPages();
+    }
+
+    public static void persistPages(Request req){
+        store().persistPages(req);
+    }
+
+    public static Collection<MoPage> pages(){
+        return store().pages().values();
+    }
+    public static Collection<MoPage> pages(Request req){
+        return store().pages(req).values();
+    }
+
+    public static MoUser user(String username){
+        return store().user(username);
+    }
+    public static List<MoUser> users(){
+        return store().users();
+    }
+
+    public static byte[] file(MoId id){
+        return store().file(id);
     }
 
     public static void rollbackPages(){
-        instance().pages = store().pages().stream().collect(Collectors.toMap(p->p.name(),p->p));
+        store().rollbackPages();
+    }
+
+    public static void rollbackPages(Request req){
+        store().rollbackPages(req);
     }
 //
 //    public static void init(String siteName){
@@ -86,7 +107,7 @@ public class Minimo {
     }
 
     public static void save(String name, Request req) {
-        MoPage page = page(name);
+        MoPage page = page(req,name);
 
         FormUtil form = new FormUtil(req);
         form.parseFormInputs();
@@ -138,7 +159,7 @@ public class Minimo {
             c.name(value);
         });
 
-        persist();
+        store().persistPages(req);
     }
 
 

@@ -135,6 +135,14 @@ public class MoPage implements Serializable {
         return Velocity.engine.render(new ModelAndView(model, "/assets/minimoassets/vms/render/mo-page.vm"));
     }
 
+    public MoPage copyWithId(){
+        MoPage page = new MoPage(name);
+        for(GenericContent c : children)
+            page.children.add(c.copyWithId());
+        page._id=_id;
+        return page;
+    }
+
     @Override
     public String toString(){
         return JsonUtil.toJson(this);

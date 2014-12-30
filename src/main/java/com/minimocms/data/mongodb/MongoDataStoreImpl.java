@@ -1,8 +1,8 @@
 package com.minimocms.data.mongodb;
 
 import com.minimocms.data.Collections;
-import com.minimocms.data.DataStoreInterface;
 import com.minimocms.data.MoId;
+import com.minimocms.data.SimpleDataStoreInterface;
 import com.minimocms.type.MoPage;
 import com.minimocms.type.MoUser;
 import com.minimocms.utils.IdUtil;
@@ -16,25 +16,31 @@ import org.bson.types.ObjectId;
 import spark.utils.IOUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public class MongoDataStoreImpl implements DataStoreInterface {
+public class MongoDataStoreImpl extends SimpleDataStoreInterface {
 
     MongoStore store;
+    Map<String,MoPage> pages = new HashMap<>();
+
     public MongoDataStoreImpl(String dbName){
         dbName="minimo-"+dbName;
         store = new MongoStore(dbName);
     }
 
     @Override
-    public List<MoPage> pages() {
-        List<MoPage> pages = new ArrayList<>();
-        for(DBObject o:store.collection(Collections.PAGES).find()){
-            pages.add(JsonUtil.gson().fromJson(o.toString(), MoPage.class));
-        }
+    public Map<String,MoPage> pages() {
         return pages;
+    }
+
+    @Override
+    public void rollbackPages(){
+        List<MoPage> ps = new ArrayList<>();
+        for(DBObject o:store.collection(Collections.PAGES).find()){
+            ps.add(JsonUtil.gson().fromJson(o.toString(), MoPage.class));
+        }
+        pages= ps.stream().collect(Collectors.toMap(p->p.name(),p->p));
     }
 
     @Override
@@ -46,10 +52,21 @@ public class MongoDataStoreImpl implements DataStoreInterface {
         return users;
     }
 
+//    @Override
+//    public MoPage page(String name) {
+//        BasicDBObject doc = new BasicDBObject("name", name);
+//        return JsonUtil.gson().fromJson(store.collection(Collections.PAGES).findOne(doc).toString(), MoPage.class);
+//    }
+
     @Override
-    public MoPage page(String name) {
-        BasicDBObject doc = new BasicDBObject("name", name);
-        return JsonUtil.gson().fromJson(store.collection(Collections.PAGES).findOne(doc).toString(), MoPage.class);
+    public MoPage page(String name){
+        if(pages().containsKey(name)){
+            return pages().get(name);
+        } else {
+            MoPage page = new MoPage(name);
+            pages().put(page.name(), page);
+            return page;
+        }
     }
 
     @Override
@@ -59,29 +76,34 @@ public class MongoDataStoreImpl implements DataStoreInterface {
     }
 
     @Override
-    public void savePage(MoPage page) {
+    public void persistPage(MoPage page) {
         store.collection(Collections.PAGES).update(
                 new BasicDBObject("name", page.name()),
                 (DBObject) JSON.parse(JsonUtil.toJson(page)), true, false);
     }
 
     @Override
-    public void saveUser(MoUser user) {
+    public void persistUser(MoUser user) {
         store.collection(Collections.USERS).update(
                 new BasicDBObject("username", user.getUsername()),
                 (DBObject) JSON.parse(JsonUtil.toJson(user)), true, false);
     }
 
     @Override
-    public void savePages(Collection<MoPage> pages) {
-        for(MoPage page:pages)
-            savePage(page);
+    public void persistPages(){
+        for(MoPage page:pages.values())
+            persistPage(page);
     }
-
+//    @Override
+//    public void savePages(Collection<MoPage> pages) {
+//        for(MoPage page:pages)
+//            savePage(page);
+//    }
+//
     @Override
-    public void saveUsers(Collection<MoUser> users) {
+    public void persistUsers(Collection<MoUser> users) {
         for(MoUser user:users)
-            saveUser(user);
+            persistUser(user);
     }
 
     @Override

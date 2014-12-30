@@ -18,7 +18,7 @@ public class MongoDataStoreImplTest {
 
     private static void testPages() {
 //        store.savePage(page("home"));
-        for(MoPage p:store.pages()){
+        for(MoPage p:store.pages().values()){
             System.out.println("page1:"+p);
         }
 

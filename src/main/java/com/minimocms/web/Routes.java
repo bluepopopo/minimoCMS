@@ -6,7 +6,6 @@ import com.minimocms.type.GenericContent;
 import com.minimocms.type.MoList;
 import com.minimocms.type.MoPage;
 import com.minimocms.type.MoUser;
-import com.minimocms.utils.JsonUtil;
 import com.minimocms.utils.PasswordHash;
 import com.minimocms.utils.Velocity;
 import spark.ModelAndView;
@@ -25,7 +24,7 @@ public class Routes implements SparkApplication {
         staticFileLocation("/assets"); // Static files
 
         get("/minimofile/:fileid",(req,resp)->{
-            resp.raw().getOutputStream().write(store().file(new MoId(req.params("fileid"))));
+            resp.raw().getOutputStream().write(file(new MoId(req.params("fileid"))));
             return "";
         });
 
@@ -37,8 +36,8 @@ public class Routes implements SparkApplication {
         get("/minimo/page/:name", (req, resp) -> {
             Map<String, Object> model = new HashMap<>();
 
-            model.put("pages",pages());
-            model.put("page",page(req.params("name")));
+            model.put("pages",pages(req));
+            model.put("page",page(req, req.params("name")));
 
             return new ModelAndView(model, "/assets/minimoassets/vms/page.vm");
         }, Velocity.engine);
@@ -51,27 +50,27 @@ public class Routes implements SparkApplication {
         });
 
         post("/minimo/page/:name/addListElement", (req,resp) -> {
-            MoPage page = page(req.params("name"));
+            MoPage page = page(req, req.params("name"));
             MoList ls = (MoList)page.find(req.queryParams("listid"));
             String path = page.findPath(req.queryParams("listid"));
 
             System.out.println("adding list element"+req.queryParams("listid"));
 
             Map<String, Object> model = new HashMap<>();
-            model.put("pages",pages());
+            model.put("pages",pages(req));
             model.put("id",ls.id());
             model.put("path",path);
             GenericContent c = ls.add();
             model.put("c", c);
 
-            Minimo.persist();
+            persistPages(req);
 
             return new ModelAndView(model,"/assets/minimoassets/vms/render/mo-list-element.vm");
         },Velocity.engine);
 
         before("/minimo/*", (req,resp) -> {
             if(req.session().attribute("user")==null) {
-                if(Minimo.store().users().size()>0)
+                if(users().size()>0)
                     resp.redirect("/mologin");
                 else
                     resp.redirect("/mo-create-user");
@@ -89,11 +88,11 @@ public class Routes implements SparkApplication {
         }, Velocity.engine);
 
         post("/mo-create-user", (req,resp)->{
-            if(Minimo.store().users().size()>0){
+            if(users().size()>0){
                 resp.redirect("/mologin");
             } else{
                 MoUser user = new MoUser(req.queryParams("username"), PasswordHash.createHash(req.queryParams("password")));
-                Minimo.store().saveUser(user);
+                persistUser(user);
                 req.session().attribute("user",user);
                 resp.redirect("/minimo");
             }
@@ -103,7 +102,7 @@ public class Routes implements SparkApplication {
         get("/minimo/dash", (req, resp) -> {
             Map<String, Object> model = new HashMap<>();
 
-            model.put("pages",pages());
+            model.put("pages",pages(req));
 
             return new ModelAndView(model, "/assets/minimoassets/vms/index.vm");
         }, Velocity.engine);
@@ -121,15 +120,12 @@ public class Routes implements SparkApplication {
             String username = req.queryParams("username");
             String pass = req.queryParams("password");
 
-            MoUser user = Minimo.store().user(username);
+            MoUser user = user(username);
 
             if (user!=null&&PasswordHash.validatePassword(pass, user.getPassHash())) {
                 req.session().attribute("user", user);
-                System.out.println("validated");
                 resp.redirect("/minimo");
             } else {
-                System.out.println("invalid");
-                System.out.println(JsonUtil.toJson(user));
                 resp.redirect("/mologin");
             }
             return "";

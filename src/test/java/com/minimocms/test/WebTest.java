@@ -14,7 +14,7 @@ public class WebTest {
         if(pages().size()==0){
             TestData.create();
         }
-        Minimo.persist();
+        Minimo.persistPages();
         System.out.println(new Gson().toJson(pages()));
 
     }
