@@ -26,4 +26,9 @@ public abstract class SimpleDataStoreInterface implements DataStoreInterface{
     public void persistPage(Request req,MoPage page){
         persistPage(page);
     }
+
+    @Override
+    public boolean setPagesFromJson(Request req,String json) {
+        return setPagesFromJson(json);
+    }
 }

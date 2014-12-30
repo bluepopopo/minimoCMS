@@ -1,5 +1,6 @@
 package com.minimocms.data.mongodb;
 
+import com.google.gson.reflect.TypeToken;
 import com.minimocms.data.Collections;
 import com.minimocms.data.MoId;
 import com.minimocms.data.SimpleDataStoreInterface;
@@ -67,6 +68,18 @@ public class MongoDataStoreImpl extends SimpleDataStoreInterface {
             pages().put(page.name(), page);
             return page;
         }
+    }
+
+    @Override
+    public boolean setPagesFromJson(String json) {
+        try{
+            List<MoPage> pages = JsonUtil.gson().fromJson(json, new TypeToken<ArrayList<MoPage>>() {}.getType());
+            this.pages = pages.stream().collect(Collectors.toMap(p->p.name(),p->p));
+        } catch (Exception e){
+            System.err.println("Could not deserialize json: "+json);
+            return false;
+        }
+        return true;
     }
 
     @Override

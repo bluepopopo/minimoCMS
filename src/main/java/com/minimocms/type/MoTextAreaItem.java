@@ -1,6 +1,7 @@
 package com.minimocms.type;
 
 import com.minimocms.utils.Velocity;
+import org.apache.commons.lang.StringEscapeUtils;
 import spark.ModelAndView;
 
 import java.util.HashMap;
@@ -15,9 +16,6 @@ public class MoTextAreaItem extends MoItem {
         super(name);
     }
 
-    public void text(String t){
-        text=t;
-    }
 
     @Override
     public String text() {
@@ -26,15 +24,15 @@ public class MoTextAreaItem extends MoItem {
 
 
     @Override
-    public MoTextItem copy() {
-        MoTextItem t = new MoTextItem(name());
+    public MoTextAreaItem copy() {
+        MoTextAreaItem t = new MoTextAreaItem(name());
         t.text=text();
         return t;
     }
 
     @Override
-    public MoTextItem copyWithId() {
-        MoTextItem t = new MoTextItem(name());
+    public MoTextAreaItem copyWithId() {
+        MoTextAreaItem t = new MoTextAreaItem(name());
         t.text=text();
         t.setId(id());
         return t;
@@ -69,8 +67,9 @@ public class MoTextAreaItem extends MoItem {
         return type;
     }
 
+    @Override
     public void setValue(String value) {
-        this.text=value;
+        this.text= StringEscapeUtils.escapeHtml(value);
     }
 
 }

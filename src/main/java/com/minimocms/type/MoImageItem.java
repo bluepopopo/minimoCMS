@@ -37,7 +37,7 @@ public class MoImageItem extends MoItem {
 
     @Override
     public String text() {
-        return fileId;
+        return url();
     }
 
 

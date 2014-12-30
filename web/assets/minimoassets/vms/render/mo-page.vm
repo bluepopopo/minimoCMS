@@ -1,22 +1,78 @@
 
-#foreach($doc in $documents)
-    <div class="col-md-6">
-        $doc.render("")
-    </div>
-#end
+<script type="text/javascript">
 
-#foreach($ls in $lists)
-    <div class="col-md-6">
-        $ls.render("")
-    </div>
-#end
+    $(function(){
+        if($.cookie("preview")=="true"){
+            toggleContent();
+        }
+    });
+
+    function toggleContent(){
+        $('#pageIframe').src='/';
+
+        $('#content1').height($(window).height());
+        $('#pageIframe').height($(window).height());
 
 
-#foreach($it in $items)
-<div class="col-md-6">
-    $it.render("")
-</div>
-#end
-<div class="col-md-12">
+        $('#content1').toggle();
+
+        if($('#content1').is(":visible")){
+            $.cookie("preview", "true");
+        } else {
+            $.cookie("preview", "false");
+        }
+
+    }
+</script>
+
+<div class="col-md-12" style="margin-bottom:20px;">
     <input type="submit" class="btn btn-info" style="" value="Save"/>
+    <div id="toggle-preview" class="btn btn-default" onClick="toggleContent()" style="float:right">Toggle Site Preview</div>
 </div>
+
+
+<div class="col-md-6" style="display:none;float:right;margin-bottom:20px;" id="content1">
+    <iframe id="pageIframe" style="border:0;width:100%;height:100%;min-height:800px;"  src="/">Sorry, your browser doesn't support iframes, you will not be able to view the preview</iframe>
+</div>
+
+    <div class="col-md-6">
+    #set($n=0)
+        #foreach($doc in $documents)
+            #if($n>$documents.size()/2)
+                </div>
+                <div class="col-md-6">
+                #set($n=-2)
+            #end
+            $doc.render("")
+            #set($n=$n+1)
+        #end
+    </div>
+
+    <div class="col-md-6">
+    #set($n=0)
+        #foreach($ls in $lists)
+            #if($n>=$documents.size()/2)
+                </div>
+                <div class="col-md-6">
+                #set($n=-2)
+            #end
+            $ls.render("")
+            #set($n=$n+1)
+        #end
+    </div>
+    <div class="col-md-6">
+    #set($n=0)
+        #foreach($it in $items)
+            #if($n>=$documents.size()/2)
+                </div>
+                <div class="col-md-6">
+                #set($n=-2)
+            #end
+            $it.render("")
+            #set($n=$n+1)
+        #end
+    </div>
+
+    <div class="col-md-12">
+        <input type="submit" class="btn btn-info" style="" value="Save2"/>
+    </div>

@@ -22,7 +22,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Page - $page.name()
+                Upload JSON
                 <small></small>
             </h1>
         ##            <ol class="breadcrumb">
@@ -34,42 +34,36 @@
 
         <!-- Main content -->
         <section class="content">
-            #if($save=="fail")
+
+            #if($upload=="fail")
                 <div class="alert alert-danger alert-dismissable col-md-6">
                     <i class="fa fa-ban"></i>
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <b>Error!</b> Sorry, your page was not saved successfully
+                    <b>Error!</b> Sorry, your JSON was not able to be committed
                 </div>
-            #elseif($save=="success")
+            #elseif($upload=="success")
                 <div class="alert alert-success alert-dismissable col-md-6">
                     <i class="fa fa-check"></i>
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <b>Success!</b> Your page was saved successfully
+                    <b>Success!</b> Your JSON was applied successfully
                 </div>
 
             #end
+<div class="col-md-6">
+            <form action="/minimo/upload-json" method="POST">
 
-            <script type="text/javascript">
+                <div class="form-group">
+                    <label for="json">Enter JSON for all pages</label>
+                    <textarea type="text" name="json" class="form-control" rows="10" cols="60">[{}]</textarea>
+                </div>
 
-                function addListElement(id,path){
-                    $.post( "/minimo/page/$page.name()/addListElement", {listid:id}, function( data ) {
-                        console.log(data);
-                        $( "#accordion-"+id ).append( data );
-                    });
-                }
-
-                function deleteListElement(elpath,elementId,listId){
-                    $('#wrapper-'+elementId).remove();
-                    $('#accordion-'+listId).append("<input type='hidden' name='deleted:"+elpath+"/"+elementId+"' value='true' />");
-                }
-            </script>
-            <form action="/minimo/page/$page.name()" method="POST" enctype="multipart/form-data">
-
-            $page.render()
+                <div class="col-md-12">
+                    <input type="submit" class="btn btn-lg btn-info" style="" value="Save"/>
+                </div>
             </form>
+</div>
 
-
-##            #parse("${vmPath}/render/mo-page.vm")
+        ##            #parse("${vmPath}/render/mo-page.vm")
 
 
 

@@ -21,6 +21,7 @@
 <script src="$assetPath/plugins/jquery-1.11.1/jquery.min.js"></script>
 
 <script src="$assetPath/plugins/jconfirm/jquery.confirm.min.js"></script>
+<script src="$assetPath/plugins/jqcookie/jquery.cookie.js"></script>
 
 
 <script src="$assetPath/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
@@ -39,3 +40,12 @@
 
 <script type="text/javascript" src="$assetPath/js/minimo.js"></script>
 <link href="$assetPath/css/minimo.css" rel="stylesheet" type="text/css" />
+
+
+<link href='$assetPath/plugins/jquery-TE/jquery-te-1.4.0.css' rel='stylesheet' type='text/css'>
+<script src="$assetPath/plugins/jquery-TE/jquery-te-1.4.0.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".teeditor").jqte({format: false});
+    });
+</script>

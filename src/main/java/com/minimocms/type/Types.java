@@ -12,4 +12,5 @@ public class Types {
     public static final String imageItem=item+"-image";
     public static final String textAreaItem=item+"-textArea";
     public static final String selectItem=item+"-select";;
+    public static final String htmlItem=item+"-html";
 }

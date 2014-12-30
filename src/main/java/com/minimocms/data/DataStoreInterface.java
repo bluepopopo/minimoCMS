@@ -12,6 +12,7 @@ public interface DataStoreInterface {
 
     public Map<String,MoPage> pages();
     public MoPage page(String name);
+    public boolean setPagesFromJson(String json);
     public void rollbackPages();
 
     public Map<String,MoPage> pages(Request req);
@@ -19,6 +20,8 @@ public interface DataStoreInterface {
     public void rollbackPages(Request req);
     public void persistPages(Request req);
     public void persistPage(Request req,MoPage page);
+    public boolean setPagesFromJson(Request req,String json);
+
 
     public List<MoUser> users();
     public MoUser user(String username);

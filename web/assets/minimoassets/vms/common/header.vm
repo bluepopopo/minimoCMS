@@ -20,10 +20,25 @@
         $('#logoutbtn').click(function(){
             window.location.href="/mologout";
         });
+        $('#upload-json-btn').click(function(){
+            window.location.href="/minimo/upload-json";
+        });
+        $('#get-json-btn').click(function(){
+            window.location.href="/minimo/get-json";
+        });
     });
-</script>
 
-<li>
+
+
+</script>
+<li style="margin-top: 8px;margin-right: 10px;">
+
+    <button id="upload-json-btn"  class="btn btn-info">Upload JSON</button>
+</li>
+<li style="margin-top: 8px;margin-right: 10px;">
+    <button id="get-json-btn" class="btn btn-info">Get JSON</button>
+</li>
+<li style="margin-top: 8px;margin-right: 10px;">
     <button id="logoutbtn" class="btn btn-default">Logout</button>
 </li>
 ##<!-- Messages: style can be found in dropdown.less-->

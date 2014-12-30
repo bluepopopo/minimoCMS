@@ -2,6 +2,7 @@ package com.minimocms.type;
 
 import com.minimocms.utils.Pair;
 import com.minimocms.utils.Velocity;
+import org.apache.commons.lang.StringEscapeUtils;
 import spark.ModelAndView;
 
 import java.util.ArrayList;
@@ -84,7 +85,7 @@ public class MoSelectItem  extends MoItem {
     }
 
     public void setValue(String value) {
-        this.option=value;
+        this.option= StringEscapeUtils.escapeHtml(value);
     }
 
 }

@@ -106,11 +106,12 @@ public class Minimo {
         return findById(page,ids);
     }
 
-    public static void save(String name, Request req) {
-        MoPage page = page(req,name);
+    public static boolean save(String name, Request req) {
+        try{
+            MoPage page = page(req,name);
 
-        FormUtil form = new FormUtil(req);
-        form.parseFormInputs();
+            FormUtil form = new FormUtil(req);
+            form.parseFormInputs();
 
 //        System.out.println("\n\nListing qparams");
 //        form.queryParams().forEach(p -> {
@@ -123,43 +124,49 @@ public class Minimo {
 //            System.out.println("file:" +p+" "+ f.getFieldName() + " " + f.getContentType() + " " + f.getName());
 //        });
 
-        form.queryParams().stream().filter(p->p.startsWith("/")).forEach(p -> {
-            String value = form.queryParam(p);
-            GenericContent c = findById(page,p);
-            c.setValue(value);
-        });
+            form.queryParams().stream().filter(p->p.startsWith("/")).forEach(p -> {
+                String value = form.queryParam(p);
+                GenericContent c = findById(page,p);
+                c.setValue(value);
+            });
 
-        form.queryParams().stream().filter(p->p.startsWith("deleted:")).forEach(p->{
-            String value = form.queryParam(p);
-            if(value.equals("true")) {
-                p = p.substring("deleted:".length());
-                List<String> ids = new ArrayList<>(Arrays.asList(p.substring(1).split("/")));
-                String toDelete = ids.get(ids.size()-1);
-                ids.remove(ids.size()-1);
-                GenericContent c = findById(page,ids);
-                c.removeChildById(toDelete);
-            }
-        });
-
-        form.queryParams().stream().filter(p->p.startsWith("img:")).forEach(p->{
-            GenericContent c = findById(page,p.substring("img:".length()));
-            MoImageItem f = (MoImageItem)c;
-            if(form.files().contains(p.substring("img:".length()))) {
-                try {
-                    f.file(IOUtils.toByteArray(form.file(p.substring("img:".length())).getInputStream()));
-                } catch (IOException e) {
-                    e.printStackTrace();
+            form.queryParams().stream().filter(p->p.startsWith("deleted:")).forEach(p->{
+                String value = form.queryParam(p);
+                if(value.equals("true")) {
+                    p = p.substring("deleted:".length());
+                    List<String> ids = new ArrayList<>(Arrays.asList(p.substring(1).split("/")));
+                    String toDelete = ids.get(ids.size()-1);
+                    ids.remove(ids.size()-1);
+                    GenericContent c = findById(page,ids);
+                    c.removeChildById(toDelete);
                 }
-            }
-        });
+            });
 
-        form.queryParams().stream().filter(p->p.startsWith("name:")).forEach(p -> {
-            GenericContent c = findById(page,p.substring("name:".length()));
-            String value = form.queryParam(p);
-            c.name(value);
-        });
+            form.queryParams().stream().filter(p->p.startsWith("img:")).forEach(p->{
+                GenericContent c = findById(page,p.substring("img:".length()));
+                MoImageItem f = (MoImageItem)c;
+                if(form.files().contains(p.substring("img:".length()))) {
+                    try {
+                        f.file(IOUtils.toByteArray(form.file(p.substring("img:".length())).getInputStream()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
-        store().persistPages(req);
+            form.queryParams().stream().filter(p->p.startsWith("name:")).forEach(p -> {
+                GenericContent c = findById(page,p.substring("name:".length()));
+                String value = form.queryParam(p);
+                c.name(value);
+            });
+
+            store().persistPages(req);
+            return true;
+        } catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+
     }
 
 

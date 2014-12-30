@@ -85,6 +85,7 @@ public class MoList  implements GenericContent, Serializable {
         children().forEach(c->{
             ls.children.add(c.copy());
         });
+        ls.itemTemplate=itemTemplate.copy();
         return ls;
     }
     @Override
@@ -94,6 +95,7 @@ public class MoList  implements GenericContent, Serializable {
         children().forEach(c->{
             ls.children.add(c.copy());
         });
+        ls.itemTemplate=itemTemplate.copy();
         return ls;
     }
 
