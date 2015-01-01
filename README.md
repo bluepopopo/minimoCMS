@@ -1,2 +1,2 @@
-Minimo CMS
+minimoCMS
 ==========
