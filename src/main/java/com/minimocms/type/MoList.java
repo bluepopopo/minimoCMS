@@ -90,12 +90,8 @@ public class MoList  implements GenericContent, Serializable {
     }
     @Override
     public MoList copyWithId() {
-        MoList ls = new MoList(this.name,this.label);
+        MoList ls = copy();
         ls.setId(id());
-        children().forEach(c->{
-            ls.children.add(c.copy());
-        });
-        ls.itemTemplate=itemTemplate.copy();
         return ls;
     }
 

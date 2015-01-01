@@ -58,7 +58,7 @@
                 </div>
 
                 <div class="col-md-12">
-                    <input type="submit" class="btn btn-lg btn-info" style="" value="Save"/>
+                    <input type="submit" class="btn btn-info" style="" value="Save"/>
                 </div>
             </form>
 </div>

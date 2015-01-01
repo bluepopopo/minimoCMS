@@ -63,7 +63,7 @@
                     $('#accordion-'+listId).append("<input type='hidden' name='deleted:"+elpath+"/"+elementId+"' value='true' />");
                 }
             </script>
-            <form action="/minimo/page/$page.name()" method="POST" enctype="multipart/form-data">
+            <form id="theform" action="/minimo/page/$page.name()" method="POST" enctype="multipart/form-data">
 
             $page.render()
             </form>

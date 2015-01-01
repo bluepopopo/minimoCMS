@@ -35,4 +35,6 @@ public interface DataStoreInterface {
     public byte[] file(MoId id);
     public MoId saveFile(byte[] bs);
 
+    public boolean setPageFromJson(Request req, String page);
+    public boolean setPageFromJson(String page);
 }

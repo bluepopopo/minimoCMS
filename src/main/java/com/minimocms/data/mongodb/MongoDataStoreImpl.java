@@ -83,6 +83,18 @@ public class MongoDataStoreImpl extends SimpleDataStoreInterface {
     }
 
     @Override
+    public boolean setPageFromJson(String json) {
+        try{
+            MoPage page = JsonUtil.gson().fromJson(json, MoPage.class);
+            this.pages().put(page.name(),page);
+        } catch (Exception e){
+            System.err.println("Could not deserialize json: "+json);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public MoUser user(String username) {
         BasicDBObject doc = new BasicDBObject("username", username);
         return JsonUtil.gson().fromJson(store.collection(Collections.USERS).findOne(doc).toString(), MoUser.class);

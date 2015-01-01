@@ -2,6 +2,7 @@ package com.minimocms;
 
 import com.minimocms.data.DataStoreInterface;
 import com.minimocms.data.MoId;
+import com.minimocms.data.mongodb.MongoDataStoreImpl;
 import com.minimocms.type.GenericContent;
 import com.minimocms.type.MoImageItem;
 import com.minimocms.type.MoPage;
@@ -12,13 +13,37 @@ import spark.Request;
 import spark.utils.IOUtils;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Minimo {
 
     public DataStoreInterface store;
     String siteName;
+    static boolean restAuthentication=true;
 
+
+    public static void main(String args[]){
+        if(args.length==0){
+            System.err.println("Error, please specify site name as the first argument");
+            System.err.println("E.g. java -jar minimocms.jar MySite");
+        } else {
+            String siteName = args[0];
+            Minimo.init(siteName, new MongoDataStoreImpl(siteName));
+        }
+    }
+
+
+    public static void restAuthentication(boolean auth){
+        restAuthentication=auth;
+    }
+
+    public static boolean restAuthentication(){
+        return restAuthentication;
+    }
 
     static Minimo minimo = new Minimo();
     public static Minimo instance(){
@@ -160,6 +185,10 @@ public class Minimo {
                 c.name(value);
             });
 
+            String url = form.queryParam("url");
+            if(url!=null&&url.equals("")==false)
+                page.url(url);
+
             store().persistPages(req);
             return true;
         } catch(Exception e){
@@ -172,5 +201,9 @@ public class Minimo {
 
     public static DataStoreInterface store() {
         return instance().store;
+    }
+
+    public static List<String> files(Request req) {
+        return store().fileIds().stream().map(id->id.getId()).collect(Collectors.toList());
     }
 }

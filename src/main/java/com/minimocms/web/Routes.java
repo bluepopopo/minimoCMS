@@ -6,13 +6,12 @@ import com.minimocms.type.GenericContent;
 import com.minimocms.type.MoList;
 import com.minimocms.type.MoPage;
 import com.minimocms.type.MoUser;
-import com.minimocms.utils.JsonUtil;
-import com.minimocms.utils.PasswordHash;
-import com.minimocms.utils.Velocity;
+import com.minimocms.utils.*;
 import org.apache.commons.lang.StringEscapeUtils;
 import spark.ModelAndView;
 import spark.servlet.SparkApplication;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,10 +19,93 @@ import static com.minimocms.Minimo.*;
 import static spark.Spark.*;
 
 public class Routes implements SparkApplication {
+
+    Map<String,MoUser> restSessions = Collections.synchronizedMap(new LRUMap<String, MoUser>(1000));
+
     @Override
     public void init() {
 
         staticFileLocation("/assets"); // Static files
+
+        get("/morest/pages",(req,resp)->{
+            resp.type("application/json");
+            return pages(req);
+        }, new JsonTransformer());
+
+        get("/morest/page/:name",(req,resp)->{
+            resp.type("application/json");
+            return page(req,req.params("name"));
+        }, new JsonTransformer());
+
+        post("/morest/pages",(req,resp)->{
+            resp.type("application/json");
+            boolean success = Minimo.store().setPagesFromJson(req,req.queryParams("pages"));
+            Map<String,String> ret = new HashMap<String,String>();
+            if(success)ret.put("result","success");
+            else ret.put("result","fail");
+            return ret;
+        }, new JsonTransformer());
+
+        post("/morest/page/:name",(req,resp)->{
+            resp.type("application/json");
+            boolean success = Minimo.store().setPageFromJson(req,req.queryParams("page"));
+            Map<String,String> ret = new HashMap<String,String>();
+            if(success)ret.put("result","success");
+            else ret.put("result","fail");
+            return ret;
+        }, new JsonTransformer());
+
+        get("/morest/files",(req,resp)->{
+            resp.type("application/json");
+            return Minimo.files(req);
+        }, new JsonTransformer());
+
+        get("/morest/file/:fileid",(req,resp)->{
+            resp.raw().getOutputStream().write(file(new MoId(req.params("fileid"))));
+            return "";
+        }, new JsonTransformer());
+
+        before("/morest/*",(req,resp)->{
+            if(restSessions.get(req.queryParams("token"))==null){
+                halt(401,"Unauthorized, you must login to get a valid token");
+            }
+        });
+
+        get("/morestlogin",(req,resp)->{
+            resp.type("application/json");
+            String username = req.queryParams("username");
+            String pass = req.queryParams("password");
+            MoUser user = user(username);
+            Map<String,String> ret = new HashMap<String,String>();
+
+            if (user!=null&&PasswordHash.validatePassword(pass, user.getPassHash())) {
+                restSessions.put(req.session().id(),user);
+                ret.put("token",req.session().id());
+                ret.put("result","success");
+                return ret;
+            } else {
+                ret.put("result","fail");
+                return ret;
+            }
+        }, new JsonTransformer());
+
+        post("/morestlogin",(req,resp)->{
+            resp.type("application/json");
+            String username = req.queryParams("username");
+            String pass = req.queryParams("password");
+            MoUser user = user(username);
+            Map<String,String> ret = new HashMap<String,String>();
+
+            if (user!=null&&PasswordHash.validatePassword(pass, user.getPassHash())) {
+                restSessions.put(req.session().id(),user);
+                ret.put("token",req.session().id());
+                ret.put("authentication","success");
+                return ret;
+            } else {
+                ret.put("authentication","fail");
+                return ret;
+            }
+        }, new JsonTransformer());
 
 
         get("/minimo/get-json",(req,resp)->{
@@ -34,6 +116,7 @@ public class Routes implements SparkApplication {
         get("/minimo/upload-json",(req,resp)->{
             Map<String, Object> model = new HashMap<>();
             model.put("upload",req.queryParams("upload"));
+            model.put("pages",pages(req));
             return new ModelAndView(model, "/assets/minimoassets/vms/upload-json.vm");
         }, Velocity.engine);
 
@@ -105,6 +188,7 @@ public class Routes implements SparkApplication {
 
         before("/minimo", (req, resp) -> {
             resp.redirect("/minimo/page/"+pages().iterator().next().name());
+            halt();
         });
 
         get("/mo-create-user", (req,resp)->{

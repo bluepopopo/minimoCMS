@@ -30,8 +30,7 @@ public class MoHtmlItem extends MoItem {
 
     @Override
     public MoHtmlItem copyWithId() {
-        MoHtmlItem t = new MoHtmlItem(name());
-        t.text=text();
+        MoHtmlItem t = copy();
         t.setId(id());
         return t;
     }

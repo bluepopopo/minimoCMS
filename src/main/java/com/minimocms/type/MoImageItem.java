@@ -51,9 +51,8 @@ public class MoImageItem extends MoItem {
 
     @Override
     public MoImageItem copyWithId() {
-        MoImageItem f = new MoImageItem(name);
+        MoImageItem f = copy();
         f.setId(id());
-        f.fileId=fileId;
         return f;
     }
 

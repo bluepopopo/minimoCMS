@@ -64,6 +64,7 @@ public class MoDoc implements GenericContent, Serializable {
 
         Map<String, Object> model = new HashMap<>();
         model.put("label",name());
+        model.put("id",id());
         model.put("path",path+"/"+id());
         model.put("children",children());
         return model;
@@ -134,11 +135,8 @@ public class MoDoc implements GenericContent, Serializable {
         return d;
     }
     public MoDoc copyWithId(){
-        MoDoc d = new MoDoc(this.name);
+        MoDoc d = copy();
         d.setId(id());
-        children().forEach(c->{
-            d.children.add(c.copy());
-        });
         return d;
     }
 

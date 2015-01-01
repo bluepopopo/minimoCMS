@@ -38,10 +38,8 @@ public class MoSelectItem  extends MoItem {
 
     @Override
     public MoSelectItem copyWithId() {
-        MoSelectItem t = new MoSelectItem(name());
+        MoSelectItem t = copy();
         t.setId(id());
-        t.option=option;
-        t.options=options;
         return t;
     }
 

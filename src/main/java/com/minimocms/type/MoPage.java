@@ -1,6 +1,7 @@
 package com.minimocms.type;
 
 import com.minimocms.utils.*;
+import org.apache.commons.lang.StringEscapeUtils;
 import spark.ModelAndView;
 
 import java.io.Serializable;
@@ -13,6 +14,7 @@ public class MoPage implements Serializable {
     String _id;
     String type=Types.page;
     List<GenericContent> children = new ArrayList<>();
+    String url;
 
     public MoPage(){}
 
@@ -20,6 +22,14 @@ public class MoPage implements Serializable {
     public MoPage(String name) {
         this.name = name;
         _id = IdUtil.createId();
+    }
+
+    public String url(){
+        return url;
+    }
+
+    public void url(String url){
+        this.url= StringEscapeUtils.escapeHtml(url);
     }
 
     public String type() {
@@ -131,12 +141,15 @@ public class MoPage implements Serializable {
         model.put("documents",documents());
         model.put("lists",lists());
         model.put("items",items());
+        model.put("url",url());
+        model.put("name",name());
 
         return Velocity.engine.render(new ModelAndView(model, "/assets/minimoassets/vms/render/mo-page.vm"));
     }
 
     public MoPage copyWithId(){
         MoPage page = new MoPage(name);
+        page.url(url());
         for(GenericContent c : children)
             page.children.add(c.copyWithId());
         page._id=_id;
