@@ -1,10 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+    <name>minimoCMS</name>
+    <description>A flexible, developer-first CMS</description>
+    <url>http://www.minimocms.com</url>
+    <scm>
+        <url>https://github.com/minimoCMS/minimoCMS</url>
+        <connection>scm:git:git://github.com/minimoCMS/minimoCMS.git</connection>
+        <developerConnection>scm:git:git@github.com:minimoCMS/minimoCMS.git</developerConnection>
+    </scm>
+
+    <issueManagement>
+        <url>https://github.com/minimoCMS/minimoCMS/issues</url>
+        <system>GitHub Issues</system>
+    </issueManagement>
+
+    <licenses>
+        <license>
+            <name>Apache 2.0 License</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <email>matthew.stephen.james@gmail.com</email>
+            <name>Matthew James</name>
+            <url>https://github.com/minimoCMS</url>
+            <id>mj1618</id>
+        </developer>
+    </developers>
 
 	<groupId>com.minimocms</groupId>
 	<artifactId>minimo</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0</version>
 	<packaging>jar</packaging>
 
  
@@ -25,6 +55,12 @@
     </distributionManagement>
 
 	<build>
+
+        <resources>
+            <resource>
+                <directory>/web</directory>
+            </resource>
+        </resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -73,7 +109,20 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
+
 	</build>
 	<dependencies>
         <dependency>
