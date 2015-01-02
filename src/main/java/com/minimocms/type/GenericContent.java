@@ -1,6 +1,9 @@
 package com.minimocms.type;
 
+import com.minimocms.utils.Builder;
+
 import java.util.Collection;
+import java.util.List;
 
 public interface GenericContent {
     public String type();
@@ -14,6 +17,12 @@ public interface GenericContent {
     public void name(String name);
     public GenericContent copy();
     public GenericContent copyWithId();
+
+    public List<MoItem> items();
+    public MoItem item(String name);
+    public <T extends MoItem> void item(T i, Builder<T> b);
+    public <T extends MoItem> void item(T i);
+
 
     public boolean existsChildById(String id);
     public GenericContent getChildById(String id);

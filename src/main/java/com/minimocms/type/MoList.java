@@ -7,6 +7,7 @@ import spark.ModelAndView;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MoList  implements GenericContent, Serializable {
     String name;
@@ -120,6 +121,50 @@ public class MoList  implements GenericContent, Serializable {
     }
 
 
+
+    @Override
+    public <T extends MoItem> void item(T i, Builder<T> b) {
+        b.build(i);
+        children.add(i);
+    }
+
+    @Override
+    public <T extends MoItem> void item(T i) {
+        children.add(i);
+    }
+
+
+    @Override
+    public MoItem item(String name){
+        Optional<MoItem> it = items().stream().filter(i->i.name().equals(name)).findFirst();
+        if(it.isPresent()==false)return null;
+        else return it.get();
+    }
+
+    public List<MoDoc> documents(){
+        return children()
+                .stream()
+                .filter(c -> c.type().equals(Types.document))
+                .map(c -> (MoDoc) c)
+                .collect(Collectors.toList());
+    }
+
+    public List<MoList> lists(){
+        return children()
+                .stream()
+                .filter(c -> c.type().equals(Types.list))
+                .map(c -> (MoList)c)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MoItem> items(){
+        return children()
+                .stream()
+                .filter(c -> c.type().startsWith(Types.item))
+                .map(c -> (MoItem)c)
+                .collect(Collectors.toList());
+    }
 
     public <T extends GenericContent> void  buildTemplate(T c, Builder<T> b) {
         b.build(c);

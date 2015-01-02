@@ -74,14 +74,8 @@ public class MoImageItem extends MoItem {
 
     @Override
     public String render(String path) {
-        return Velocity.engine.render(new ModelAndView(model(path), "/assets/minimoassets/vms/render/mo-image-item.vm"));
+        return Velocity.engine.render(new ModelAndView(model(path), "/assets/minimoassets/vms/render/mo-image-input.vm"));
     }
-
-    @Override
-    public String renderMinimal(String path) {
-        return Velocity.engine.render(new ModelAndView(model(path), "/assets/minimoassets/vms/render/mo-image-item-min.vm"));
-    }
-
 
     @Override
     public String type() {

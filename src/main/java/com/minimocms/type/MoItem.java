@@ -1,10 +1,12 @@
 package com.minimocms.type;
 
+import com.minimocms.utils.Builder;
 import com.minimocms.utils.IdUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public abstract class MoItem implements GenericContent, Serializable {
     String name;
@@ -46,5 +48,23 @@ public abstract class MoItem implements GenericContent, Serializable {
     @Override
     public GenericContent getChildById(String id) {
         throw new IllegalArgumentException("Cannot get child in FileItem:" + id);
+    }
+
+    @Override
+    public String renderMinimal(String path) {
+        return render(path);
+    }
+
+    public List<MoItem> items(){
+        throw new RuntimeException("Cannot access sub-items list from an item");
+    }
+    public MoItem item(String name){
+        throw new RuntimeException("Cannot access sub-item from an item. Item name:"+name()+", Sub-item name:"+name);
+    }
+    public <T extends MoItem> void item(T i, Builder<T> b){
+
+    }
+    public <T extends MoItem> void item(T i){
+
     }
 }

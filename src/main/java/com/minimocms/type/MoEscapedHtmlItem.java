@@ -7,30 +7,30 @@ import spark.ModelAndView;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MoHtmlItem extends MoItem {
+public class MoEscapedHtmlItem extends MoItem {
     String text="";
     String type=Types.htmlItem;
 
-    public MoHtmlItem(){super();}
-    public MoHtmlItem(String name) {
+    public MoEscapedHtmlItem(){super();}
+    public MoEscapedHtmlItem(String name) {
         super(name);
     }
 
     @Override
     public String text() {
-        return StringEscapeUtils.unescapeHtml(text);
+        return text;
     }
 
     @Override
-    public MoHtmlItem copy() {
-        MoHtmlItem t = new MoHtmlItem(name());
+    public MoEscapedHtmlItem copy() {
+        MoEscapedHtmlItem t = new MoEscapedHtmlItem(name());
         t.text=text();
         return t;
     }
 
     @Override
-    public MoHtmlItem copyWithId() {
-        MoHtmlItem t = copy();
+    public MoEscapedHtmlItem copyWithId() {
+        MoEscapedHtmlItem t = copy();
         t.setId(id());
         return t;
     }
@@ -50,13 +50,9 @@ public class MoHtmlItem extends MoItem {
 
     @Override
     public String render(String path) {
-        return Velocity.engine.render(new ModelAndView(model(path),"/assets/minimoassets/vms/render/mo-textarea-item.vm"));
+        return Velocity.engine.render(new ModelAndView(model(path),"/assets/minimoassets/vms/render/mo-textarea-input.vm"));
     }
 
-    @Override
-    public String renderMinimal(String path) {
-        return Velocity.engine.render(new ModelAndView(model(path),"/assets/minimoassets/vms/render/mo-textarea-item-min.vm"));
-    }
 
 
     @Override

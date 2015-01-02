@@ -68,12 +68,7 @@ public class MoSelectItem  extends MoItem {
 
     @Override
     public String render(String path) {
-        return Velocity.engine.render(new ModelAndView(model(path),"/assets/minimoassets/vms/render/mo-select-item.vm"));
-    }
-
-    @Override
-    public String renderMinimal(String path) {
-        return Velocity.engine.render(new ModelAndView(model(path),"/assets/minimoassets/vms/render/mo-select-item-min.vm"));
+        return Velocity.engine.render(new ModelAndView(model(path), "/assets/minimoassets/vms/render/mo-select-input.vm"));
     }
 
 

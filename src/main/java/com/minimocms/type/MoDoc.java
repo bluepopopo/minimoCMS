@@ -94,13 +94,20 @@ public class MoDoc implements GenericContent, Serializable {
         b.build(this);
     }
 
-    public <T extends MoItem> void addItem(T i, Builder<T> b) {
+    public <T extends MoItem> void item(T i, Builder<T> b) {
         b.build(i);
         children.add(i);
     }
 
-    public <T extends MoItem> void addItem(T i) {
+    public <T extends MoItem> void item(T i) {
         children.add(i);
+    }
+
+
+    public MoItem item(String name){
+        Optional<MoItem> it = items().stream().filter(i->i.name().equals(name)).findFirst();
+        if(it.isPresent()==false)return null;
+        else return it.get();
     }
 
     public List<MoDoc> documents(){
