@@ -28,8 +28,6 @@ public class GenericContentDeserializer implements JsonDeserializer<GenericConte
                     return JsonUtil.gson().fromJson(jsonElement, MoSelectItem.class);
                 case Types.htmlItem:
                     return JsonUtil.gson().fromJson(jsonElement, MoEscapedHtmlItem.class);
-                case Types.markdownItem:
-                    return JsonUtil.gson().fromJson(jsonElement, MoMarkdownItem.class);
 
                 default:
                     throw new IllegalStateException("Cannot deserialize - " + jsonElement.getAsJsonObject().get("type").getAsString());

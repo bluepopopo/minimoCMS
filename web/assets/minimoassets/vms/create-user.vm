@@ -12,7 +12,7 @@
 <body class="bg-black">
 <div class="form-box" id="login-box">
     <div class="header">minimoCMS Create User</div>
-    <form action="/mologin" method="post">
+    <form action="/mo-create-user" method="post">
         <div class="body bg-gray">
             #if($message)
                 $message
