@@ -5,8 +5,8 @@ minimoCMS website: http://www.minimocms.com
 
 [TOC]
 
-Introduction
------------
+## Introduction
+
 minimoCMS allows you to define the structure of the *data* in your website
 using a simple API. The API allows you to define MoPage's, and a MoPage can
 contain combinations of 3 main types - MoDocument, MoList and MoItem. From
