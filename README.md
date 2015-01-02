@@ -140,7 +140,7 @@ The next step is for the "index.vm" velocity template to render the html/css/js 
 #foreach($doc in $page.document("Main Content").list("Products").items())
     <div class="col-md-3 col-sm-6 hero-feature">
         <div class="thumbnail">
-            <img src="$doc.get("Image").text()" alt="">
+            <img src='$doc.get("Image").text()' alt="">
             <div class="caption">
                 <h3>$doc.get("Title").text()</h3>
                 <p>$doc.get("Description").text()</p>
@@ -155,8 +155,8 @@ The next step is for the "index.vm" velocity template to render the html/css/js 
 ```
 $page refers directly to our "Home" page we inserted into the model. From there you can see we are accessing the data in almost the exact same way as we defined it. We are iterating over the MoDoc's in our Products list, and rendering an image, title, description and 2 button. One thing we would include in a real website is a link for the Buy and Info buttons, something like this:
 ```html
-<a href="$doc.item("Buy URL").text()" class="btn btn-primary">$doc.item("Buy Button").text()</a>
-<a href="$doc.item("Info URL").text()" class="btn btn-default">$doc.item("Info Button").text()</a>
+<a href='$doc.item("Buy URL").text()' class="btn btn-primary">$doc.item("Buy Button").text()</a>
+<a href='$doc.item("Info URL").text()' class="btn btn-default">$doc.item("Info Button").text()</a>
 ```
 
 
