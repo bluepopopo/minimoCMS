@@ -49,7 +49,17 @@ This has done 2 things -
 The Sample web-app creates data in a separate function, here is the full main method:
 
 ```java
-asdf
+public static void main(String args[]){
+   Minimo.init(
+      "minimoCMSSample", 
+      new MongoDataStoreImpl("minimoCMSSample"));
+      
+   if(Minimo.pages().size()==0)
+      createData();
+      
+   Minimo.persistPages();
+   createWeb(); // this will be covered later
+}
 ```
 Ignore the last line, that is where your web-app will be defined. The line after init() checks to see if pages have already been defined, if not we create the data. The second-last line persists or saves the pages which were created.
 
