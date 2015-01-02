@@ -35,24 +35,21 @@ You will also need MongoDB running on localhost if you are using the default dat
 Because we are running an All-in-One web-app (see Deployment Options) we will initialize minimoCMS like so -
 
 ```java
- public static void main(String args[]){
-        Minimo.init("minimoCMSSample", new MongoDataStoreImpl("minimoCMSSample"));
-        ...
+public static void main(String args[]){
+   Minimo.init(
+      "minimoCMSSample", 
+      new MongoDataStoreImpl("minimoCMSSample"));
+   ...
 }
 ```
 This has done 2 things -
 1. Initialised minimoCMS with the siteName specified in the first argument 2. Initialised the MongoDB data store, the store will use the same site name "minimoCMSSample". Here is where you would specify your own implementation of DataStoreInterface if you don't want to use MongoDB. Note in this example you will need MongoDB running on your localhost for this data store to work.
 
 ### Define Data
-The Sample web-app creates data in a separate function, here is the full main method
+The Sample web-app creates data in a separate function, here is the full main method:
 
 ```java
-public static void main(String args[]){
-        Minimo.init("minimoCMSSample", new MongoDataStoreImpl("minimoCMSSample"));
-        if(Minimo.pages().size()==0)createData();
-        Minimo.persistPages();
-        createWeb(); // this will be covered later
-}
+asdf
 ```
 Ignore the last line, that is where your web-app will be defined. The line after init() checks to see if pages have already been defined, if not we create the data. The second-last line persists or saves the pages which were created.
 
@@ -74,27 +71,26 @@ contain documents, lists or other items.
 
 ### Example Data Definition
 
-I've included a simple example -
+I've included a simple example:
 
 ```java
-page("Home").document("Main Content").list("Products").buildTemplate(new MoDoc("Product"),doc->{
-	doc.addItem(new MoTextItem("Title"),
-	txt -> txt.setValue("My Product Title"));
+page("Home")
+   .document("Main Content")
+   .list("Products")
+   .buildTemplate(
+      new MoDoc("Product"),
+      doc->{
+    
+    //Here is where we build the structure of an individual product
+    doc.item(new MoTextItem("Title"),
+            txt -> txt.setValue("My Product Title"));
 
-	doc.addItem(new MoTextAreaItem("Description"),
-	txt -> txt.setValue("A product by the people, for the people"));
-
-	doc.addItem(new MoImageItem("Image"),
-	f -> f.file(new ResourceUtil().getFileBytes("/assets/images/800x500.gif")));
-
-	doc.addItem(new MoTextItem("Buy Button"),
-	txt -> txt.setValue("Buy Now"));
-
-	doc.addItem(new MoTextItem("Info-Button"),
-	txt -> txt.setValue("More Info"));
+    doc.item(new MoTextAreaItem("Description"),
+            txt -> txt.setValue("A product by the people, for the people"));
+    
+    ...
+    
 });
-
-page("Home").document("Body").list("Products").add(4);
 ```
 
 This is quite a detailed definition, so let's break it down starting from the top. First all the methods we are using are statically defined in Minimo.class, so we need to start with
@@ -111,23 +107,34 @@ page("Home").document("Main Content")
 ```
 And in the document we create a list of products (we name this list "Products").
 ```java
-page("Home").document("Main Content").list("Products")
+page("Home")
+   .document("Main Content")
+   .list("Products")
 ```
 And as mentioned in the previous section, we need to define the structure of the items in our list. We are going to define the items as MoDoc's, and then we are going to 'build' (or define) the MoDoc.
 ```java
-page("Home").document("Main Content").list("Products").buildTemplate(new MoDoc("Product"), doc -> {
-   //Our "Product" document is defined here
-});
+page("Home")
+   .document("Main Content")
+   .list("Products")
+   .buildTemplate(
+      new MoDoc("Product"), 
+      doc -> {
+          //Our "Product" document is defined here
+      });
 ```
 
 ### Example Data Placement in Site
-Coming back to the main() method before, right after we defined and persisted the data definition we ignored the line with createWeb(). Simply it creates a web-route, inserts the data we created into our model and renders a velocity template with html/css (and our data mixed in). Here's the createWeb() method -
+Coming back to the main() method before, right after we defined and persisted the data definition we ignored the line with createWeb(). Simply it creates a web-route, inserts the data we created into our model and renders a velocity template with html/css (and our data mixed in). Here's the createWeb() method:
 ```java
 private static void createWeb() {
    get("/",(req,resp)->{
        Map<String,Object> model = new HashMap<>();
-       model.put("page",page("Home")); //the home page and all data in it
-       return new ModelAndView(model,"/index.vm"); //the velocity template we're rendering
+       
+       //the home page and all data in it
+       model.put("page",page("Home")); 
+       
+       //the velocity template we're rendering
+       return new ModelAndView(model,"/index.vm");
    }, new VelocityTemplateEngine());
 }
 ```
@@ -136,7 +143,7 @@ So using Spark we've defined a default route "/", put our "Home" page definition
 The next step is for the "index.vm" velocity template to render the html/css/js for the website with our data mixed in. I will skip the generic html/css code as we are most concerned about how the data is rendered. Let's have a look at an exerpt:
 
 ```html
-<!-- Page Features -->
+<!-- Products -->
 #foreach($doc in $page.document("Main Content").list("Products").items())
     <div class="col-md-3 col-sm-6 hero-feature">
         <div class="thumbnail">
@@ -145,8 +152,12 @@ The next step is for the "index.vm" velocity template to render the html/css/js 
                 <h3>$doc.get("Title").text()</h3>
                 <p>$doc.get("Description").text()</p>
                 <p>
-                    <a href="#" class="btn btn-primary">$doc.item("Buy Button").text()</a>
-                    <a href="#" class="btn btn-default">$doc.item("Info Button").text()</a>
+                    <a href="#" class="btn btn-primary">
+                       $doc.item("Buy Button").text()
+                    </a>
+                    <a href="#" class="btn btn-default">
+                       $doc.item("Info Button").text()
+                    </a>
                 </p>
             </div>
         </div>
@@ -155,8 +166,12 @@ The next step is for the "index.vm" velocity template to render the html/css/js 
 ```
 $page refers directly to our "Home" page we inserted into the model. From there you can see we are accessing the data in almost the exact same way as we defined it. We are iterating over the MoDoc's in our Products list, and rendering an image, title, description and 2 button. One thing we would include in a real website is a link for the Buy and Info buttons, something like this:
 ```html
-<a href='$doc.item("Buy URL").text()' class="btn btn-primary">$doc.item("Buy Button").text()</a>
-<a href='$doc.item("Info URL").text()' class="btn btn-default">$doc.item("Info Button").text()</a>
+<a href='$doc.item("Buy URL").text()' class="btn btn-primary">
+   $doc.item("Buy Button").text()
+</a>
+<a href='$doc.item("Info URL").text()' class="btn btn-default">
+   $doc.item("Info Button").text()
+</a>
 ```
 
 
