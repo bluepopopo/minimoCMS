@@ -1,7 +1,6 @@
 package com.minimocms.web;
 
 import com.minimocms.Minimo;
-import com.minimocms.data.MoId;
 import com.minimocms.type.GenericContent;
 import com.minimocms.type.MoList;
 import com.minimocms.type.MoPage;
@@ -61,7 +60,7 @@ public class Routes implements SparkApplication {
         }, new JsonTransformer());
 
         get("/morest/file/:fileid",(req,resp)->{
-            resp.raw().getOutputStream().write(file(new MoId(req.params("fileid"))));
+            resp.raw().getOutputStream().write(file(req.params("fileid")));
             return "";
         }, new JsonTransformer());
 
@@ -131,7 +130,7 @@ public class Routes implements SparkApplication {
         });
 
         get("/minimofile/:fileid",(req,resp)->{
-            resp.raw().getOutputStream().write(file(new MoId(req.params("fileid"))));
+            resp.raw().getOutputStream().write(file(req.params("fileid")));
             return "";
         });
 

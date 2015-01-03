@@ -31,9 +31,9 @@ public interface DataStoreInterface {
     public void persistUser(MoUser user);
     public void persistUsers(Collection<MoUser> users);
 
-    public List<MoId> fileIds();
-    public byte[] file(MoId id);
-    public MoId saveFile(byte[] bs);
+    public List<String> fileIds();
+    public byte[] file(String id);
+    public String saveFile(byte[] bs);
 
     public boolean setPageFromJson(Request req, String page);
     public boolean setPageFromJson(String page);

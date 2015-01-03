@@ -1,7 +1,6 @@
 package com.minimocms;
 
 import com.minimocms.data.DataStoreInterface;
-import com.minimocms.data.MoId;
 import com.minimocms.data.mongodb.MongoDataStoreImpl;
 import com.minimocms.type.GenericContent;
 import com.minimocms.type.MoImageItem;
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Minimo {
 
@@ -84,7 +82,7 @@ public class Minimo {
         return store().users();
     }
 
-    public static byte[] file(MoId id){
+    public static byte[] file(String id){
         return store().file(id);
     }
 
@@ -204,6 +202,6 @@ public class Minimo {
     }
 
     public static List<String> files(Request req) {
-        return store().fileIds().stream().map(id->id.getId()).collect(Collectors.toList());
+        return store().fileIds();
     }
 }

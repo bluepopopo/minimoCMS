@@ -1,6 +1,5 @@
 package com.minimocms.type;
 
-import com.minimocms.data.MoId;
 import com.minimocms.utils.Velocity;
 import spark.ModelAndView;
 
@@ -27,11 +26,11 @@ public class MoImageItem extends MoItem {
     }
 
     public byte[] fileBytes(){
-        return store().file(new MoId(fileId));
+        return store().file(fileId);
     }
 
     public void file(byte[] bytes){
-        fileId = store().saveFile(bytes).getId();
+        fileId = store().saveFile(bytes);
     }
 
 

@@ -1,6 +1,5 @@
 package com.minimocms.test;
 
-import com.minimocms.data.MoId;
 import com.minimocms.data.mongodb.MongoDataStoreImpl;
 import com.minimocms.test.web.TestData;
 import com.minimocms.type.MoPage;
@@ -26,11 +25,11 @@ public class MongoDataStoreImplTest {
     }
 
     private static void testFile() {
-        MoId id = store.saveFile(new byte[]{'a','s','d','f'});
-        System.out.println("moid:"+id.getId());
+        String id = store.saveFile(new byte[]{'a','s','d','f'});
+        System.out.println("moid:"+id);
 
-        for(MoId i : store.fileIds()){
-            System.out.println("all ids:"+i.getId());
+        for(String i : store.fileIds()){
+            System.out.println("all ids:"+i);
         }
 
         byte[] b = store.file(id);

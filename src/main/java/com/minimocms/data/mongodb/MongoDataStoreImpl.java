@@ -2,7 +2,6 @@ package com.minimocms.data.mongodb;
 
 import com.google.gson.reflect.TypeToken;
 import com.minimocms.data.Collections;
-import com.minimocms.data.MoId;
 import com.minimocms.data.SimpleDataStoreInterface;
 import com.minimocms.type.MoPage;
 import com.minimocms.type.MoUser;
@@ -13,7 +12,6 @@ import com.mongodb.DBObject;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSInputFile;
 import com.mongodb.util.JSON;
-import org.bson.types.ObjectId;
 import spark.utils.IOUtils;
 
 import java.io.IOException;
@@ -132,39 +130,38 @@ public class MongoDataStoreImpl extends SimpleDataStoreInterface {
     }
 
     @Override
-    public List<MoId> fileIds() {
+    public List<String> fileIds() {
 
-        List<MoId> ids = new ArrayList<>();
+        List<String> ids = new ArrayList<>();
 
         GridFS grid = store.gridFS(Collections.FILES);
         for(DBObject o: grid.getFileList()){
-            ids.add(new MoId(o.get("_id").toString()));
+            ids.add(o.get("filename").toString());
         }
         return ids;
     }
 
     @Override
-    public byte[] file(MoId id) {
-        ObjectId oid = new ObjectId(id.getId());
+    public byte[] file(String filename) {
         try {
-            return IOUtils.toByteArray(store.gridFS(Collections.FILES).findOne(oid).getInputStream());
+            return IOUtils.toByteArray(store.gridFS(Collections.FILES).findOne(filename).getInputStream());
         } catch (IOException e) {
-            throw new IllegalArgumentException("Could not get file with id:"+id.getId());
+            throw new IllegalArgumentException("Could not get file with filename:"+filename);
         }
     }
 
     @Override
-    public MoId saveFile(byte[] bytes) {
+    public String saveFile(byte[] bytes) {
         GridFS grid = store.gridFS(Collections.FILES);
         String md5 = IdUtil.md5(bytes);
 
         if(grid.findOne(md5)!=null)
-            return new MoId((String)grid.findOne(md5).getId().toString());
+            return grid.findOne(md5).getFilename();
 
         GridFSInputFile in = grid.createFile( bytes );
         in.setFilename(md5);
         in.save();
 
-        return new MoId(in.getId().toString());
+        return in.getFilename();
     }
 }
