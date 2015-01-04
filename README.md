@@ -183,7 +183,8 @@ $page refers directly to our "Home" page we inserted into the model. From there 
    $doc.item("Info Button").text()
 </a>
 ```
-
+## Packaging Whole App
+mvn assembly:assembly -DdescriptorId=jar-with-dependencies
 
 ## Deployment Options
 minimoCMS can be run with your website in two ways
