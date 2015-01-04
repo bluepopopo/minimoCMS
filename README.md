@@ -1,6 +1,7 @@
 # minimoCMS - A developer-first CMS
 
 minimoCMS website: http://www.minimocms.com
+
 Google groups: https://groups.google.com/forum/#!forum/minimocms
 
 ## Introduction
