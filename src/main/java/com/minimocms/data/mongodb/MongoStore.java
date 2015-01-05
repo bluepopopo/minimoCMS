@@ -15,6 +15,8 @@ public class MongoStore {
     final static String SERVER="localhost";
 
     String dbName;
+    DB db;
+    MongoClient client;
 
     public MongoStore(String dbName){
         this.dbName=dbName;
@@ -24,13 +26,14 @@ public class MongoStore {
         return db().getCollection(collectionName);
     }
     private DB db(){
-        try {
-            MongoClient client = new MongoClient(SERVER);
-            DB db = client.getDB(dbName);
-            return db;
-        } catch (UnknownHostException e) {
-            throw new IllegalStateException("Unable to connect to MongoDB");
-        }
+        if(client==null)
+            try {
+                client = new MongoClient(SERVER);
+                db = client.getDB(dbName);
+            } catch (UnknownHostException e) {
+                throw new IllegalStateException("Unable to connect to MongoDB");
+            }
+        return db;
     }
 
     public GridFS gridFS(String name){
@@ -39,6 +42,14 @@ public class MongoStore {
 
     public void insert(String collectionName,Object o) {
         collection(collectionName).insert((DBObject) JSON.parse(JsonUtil.toJson(o)));
+    }
+
+    public void close(){
+        try{
+            client.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
 }

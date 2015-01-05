@@ -20,12 +20,12 @@ import java.util.stream.Collectors;
 
 public class MongoDataStoreImpl extends SimpleDataStoreInterface {
 
-    MongoStore store;
     Map<String,MoPage> pages = new HashMap<>();
 
+    String dbName;
+
     public MongoDataStoreImpl(String dbName){
-        dbName="minimo-"+dbName;
-        store = new MongoStore(dbName);
+        this.dbName="minimo-"+dbName;
     }
 
     @Override
@@ -35,19 +35,23 @@ public class MongoDataStoreImpl extends SimpleDataStoreInterface {
 
     @Override
     public void rollbackPages(){
+        MongoStore store = new MongoStore(this.dbName);
         List<MoPage> ps = new ArrayList<>();
         for(DBObject o:store.collection(Collections.PAGES).find()){
             ps.add(JsonUtil.gson().fromJson(o.toString(), MoPage.class));
         }
         pages= ps.stream().collect(Collectors.toMap(p->p.name(),p->p));
+        store.close();
     }
 
     @Override
     public List<MoUser> users() {
+        MongoStore store = new MongoStore(this.dbName);
         List<MoUser> users = new ArrayList<>();
         for(DBObject o:store.collection(Collections.USERS).find()){
             users.add(JsonUtil.gson().fromJson(o.toString(), MoUser.class));
         }
+        store.close();
         return users;
     }
 
@@ -94,22 +98,29 @@ public class MongoDataStoreImpl extends SimpleDataStoreInterface {
 
     @Override
     public MoUser user(String username) {
+        MongoStore store = new MongoStore(this.dbName);
         BasicDBObject doc = new BasicDBObject("username", username);
-        return JsonUtil.gson().fromJson(store.collection(Collections.USERS).findOne(doc).toString(), MoUser.class);
+        MoUser user = JsonUtil.gson().fromJson(store.collection(Collections.USERS).findOne(doc).toString(), MoUser.class);
+        store.close();
+        return user;
     }
 
     @Override
     public void persistPage(MoPage page) {
+        MongoStore store = new MongoStore(this.dbName);
         store.collection(Collections.PAGES).update(
                 new BasicDBObject("name", page.name()),
                 (DBObject) JSON.parse(JsonUtil.toJson(page)), true, false);
+        store.close();
     }
 
     @Override
     public void persistUser(MoUser user) {
+        MongoStore store = new MongoStore(this.dbName);
         store.collection(Collections.USERS).update(
                 new BasicDBObject("username", user.getUsername()),
                 (DBObject) JSON.parse(JsonUtil.toJson(user)), true, false);
+        store.close();
     }
 
     @Override
@@ -131,6 +142,7 @@ public class MongoDataStoreImpl extends SimpleDataStoreInterface {
 
     @Override
     public List<String> fileIds() {
+        MongoStore store = new MongoStore(this.dbName);
 
         List<String> ids = new ArrayList<>();
 
@@ -138,20 +150,28 @@ public class MongoDataStoreImpl extends SimpleDataStoreInterface {
         for(DBObject o: grid.getFileList()){
             ids.add(o.get("filename").toString());
         }
+
+        store.close();
         return ids;
     }
 
     @Override
     public byte[] file(String filename) {
+
+        MongoStore store = new MongoStore(this.dbName);
+        byte[] bs=null;
         try {
             return IOUtils.toByteArray(store.gridFS(Collections.FILES).findOne(filename).getInputStream());
         } catch (IOException e) {
             throw new IllegalArgumentException("Could not get file with filename:"+filename);
+        } finally {
+            store.close();
         }
     }
 
     @Override
     public String saveFile(byte[] bytes) {
+        MongoStore store = new MongoStore(this.dbName);
         GridFS grid = store.gridFS(Collections.FILES);
         String md5 = IdUtil.md5(bytes);
 
@@ -162,6 +182,9 @@ public class MongoDataStoreImpl extends SimpleDataStoreInterface {
         in.setFilename(md5);
         in.save();
 
-        return in.getFilename();
+
+        String filename= in.getFilename();
+        store.close();
+        return filename;
     }
 }

@@ -39,8 +39,8 @@
 </div>
 
 
-<div class="col-md-6" style="display:none;float:right;margin-bottom:20px;" id="content1">
-    <iframe id="pageIframe" style="border:0;width:100%;height:100%;min-height:800px;"  src="$url">Sorry, your browser doesn't support iframes, you will not be able to view the preview</iframe>
+<div class="col-md-6" style="display:none;margin-bottom:20px;" id="content1">
+    <iframe id="pageIframe" style="border:0;width:100%;height:100%"  src="$url">Sorry, your browser doesn't support iframes, you will not be able to view the preview</iframe>
 </div>
 
     <div class="col-md-6">
