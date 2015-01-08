@@ -62,6 +62,10 @@ public class MoPage implements Serializable {
         }
     }
 
+    public GenericContent item(String name){
+        return getChildByName(name);
+    }
+
     public boolean existsChildByName(String docName) {
         for(GenericContent c:children)
             if(c.name().equals(docName))return true;
