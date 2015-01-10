@@ -65,4 +65,8 @@ public class MoEscapedHtmlItem extends MoItem {
         this.text= StringEscapeUtils.escapeHtml(value);
     }
 
+    @Override
+    public String toString(){
+        return text();
+    }
 }

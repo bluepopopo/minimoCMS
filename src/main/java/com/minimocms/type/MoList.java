@@ -166,9 +166,10 @@ public class MoList  implements GenericContent, Serializable {
                 .collect(Collectors.toList());
     }
 
-    public <T extends GenericContent> void  buildTemplate(T c, Builder<T> b) {
+    public <T extends GenericContent> MoList  buildTemplate(T c, Builder<T> b) {
         b.build(c);
         itemTemplate = c;
+        return this;
     }
 
     public GenericContent add() {

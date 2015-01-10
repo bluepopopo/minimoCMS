@@ -66,4 +66,8 @@ public class MoTextItem extends MoItem {
         this.text=value;
     }
 
+    @Override
+    public String toString(){
+        return text();
+    }
 }

@@ -81,5 +81,10 @@ public class MoSelectItem  extends MoItem {
         this.option= StringEscapeUtils.escapeHtml(value);
     }
 
+    @Override
+    public String toString(){
+        return text();
+    }
+
 }
 

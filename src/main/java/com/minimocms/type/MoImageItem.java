@@ -85,4 +85,8 @@ public class MoImageItem extends MoItem {
         this.fileId = value;
     }
 
+    @Override
+    public String toString(){
+        return text();
+    }
 }
