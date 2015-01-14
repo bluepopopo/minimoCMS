@@ -1,0 +1,21 @@
+
+<script type="text/javascript">
+    // jQuery OnLoad
+    $(function(){
+
+
+        var name="$path";
+        $('input[id="'+name+'"][sub="false"]').on('ifChanged',function(){
+            $('input[id="'+name+'"][sub="true"]').iCheck('toggle');
+        });
+
+    });
+</script>
+
+<div class="form-group">
+    <label for="$path">$label</label>
+    <input type="checkbox" name="$path" id="$path" sub="false" class="form-control" value="true" #if($checked)checked#end />
+    <div style="display:none" >
+        <input type="checkbox" name="$path" id="$path" sub="true" class="form-control" value="false" #if(!$checked)checked#end/>
+    </div>
+</div>

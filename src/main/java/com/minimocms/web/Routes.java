@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.minimocms.Minimo.*;
+import static com.minimocms.utils.URLDecoder.decodeUTF8;
 import static spark.Spark.*;
 
 public class Routes implements SparkApplication {
@@ -33,7 +34,7 @@ public class Routes implements SparkApplication {
 
         get("/morest/page/:name",(req,resp)->{
             resp.type("application/json");
-            return page(req,req.params("name"));
+            return page(req,decodeUTF8(req.params("name")));
         }, new JsonTransformer());
 
         post("/morest/pages",(req,resp)->{
@@ -60,7 +61,7 @@ public class Routes implements SparkApplication {
         }, new JsonTransformer());
 
         get("/morest/file/:fileid",(req,resp)->{
-            resp.raw().getOutputStream().write(file(req.params("fileid")));
+            resp.raw().getOutputStream().write(file(decodeUTF8(req.params("fileid"))));
             return "";
         }, new JsonTransformer());
 
@@ -130,7 +131,7 @@ public class Routes implements SparkApplication {
         });
 
         get("/minimofile/:fileid",(req,resp)->{
-            resp.raw().getOutputStream().write(file(req.params("fileid")));
+            resp.raw().getOutputStream().write(file(decodeUTF8(req.params("fileid"))));
             return "";
         });
 
@@ -141,25 +142,35 @@ public class Routes implements SparkApplication {
         });
         get("/minimo/page/:name", (req, resp) -> {
             Map<String, Object> model = new HashMap<>();
-
             model.put("pages",pages(req));
-            model.put("page",page(req, req.params("name")));
-            model.put("save",req.queryParams("save"));
+            model.put("page",page(req, decodeUTF8(req.params("name"))));
+            model.put("success",StringEscapeUtils.escapeHtml(req.queryParams("success")));
+            model.put("fail",StringEscapeUtils.escapeHtml(req.queryParams("error")));
+
             return new ModelAndView(model, "/assets/minimoassets/vms/page.vm");
         }, Velocity.engine);
 
+        get("/minimo/delete/:name", (req, resp) -> {
+            Minimo.store().deletePage(decodeUTF8(req.params("name")));
+            Minimo.rollbackPages();
+            resp.redirect("/minimo");
+            halt();
+            return "";
+        });
+
         post("/minimo/page/:name", (req, resp) -> {
-            boolean success = Minimo.save(req.params("name"),req);
+            boolean success = Minimo.save(decodeUTF8(req.params("name")),req);
 //            JsonUtil.println(req.queryParams());
             if(success)
-                resp.redirect("/minimo/page/" + req.params("name")+"?save=success");
+                resp.redirect("/minimo/page/" + decodeUTF8(req.params("name")+"?success=Your page was saved successfully"));
             else
-                resp.redirect("/minimo/page/" + req.params("name")+"?save=fail");
+                resp.redirect("/minimo/page/" + decodeUTF8(req.params("name")+"?error=Your page could not be saved"));
+            halt();
             return "";
         });
 
         post("/minimo/page/:name/addListElement", (req,resp) -> {
-            MoPage page = page(req, req.params("name"));
+            MoPage page = page(req, decodeUTF8(decodeUTF8(req.params("name"))));
             MoList ls = (MoList)page.find(req.queryParams("listid"));
             String path = page.findPath(req.queryParams("listid"));
 
@@ -203,6 +214,26 @@ public class Routes implements SparkApplication {
                 persistUser(user);
                 req.session().attribute("user",user);
                 resp.redirect("/minimo");
+            }
+            return "";
+        });
+        
+        get("/minimo/copy/:frompage",(req,resp)->{
+            String frompage = decodeUTF8(req.params("frompage"));
+            String topage = decodeUTF8(req.queryParams("topage"));
+
+            if(Minimo.store().existsPage(topage)){
+                resp.redirect("/minimo/page/"+frompage+"?error=Unable to copy: page already exists");
+                halt();
+            } else {
+                MoPage page = page(frompage).copy();
+                page.name(topage);
+
+                store().persistPage(page);
+                Minimo.rollbackPages();
+
+                resp.redirect("/minimo/page/"+topage+"?success=Copied page");
+                halt();
             }
             return "";
         });

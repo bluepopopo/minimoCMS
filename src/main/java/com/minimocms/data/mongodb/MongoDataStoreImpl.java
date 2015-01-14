@@ -9,6 +9,7 @@ import com.minimocms.utils.IdUtil;
 import com.minimocms.utils.JsonUtil;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.mongodb.WriteResult;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSInputFile;
 import com.mongodb.util.JSON;
@@ -45,6 +46,16 @@ public class MongoDataStoreImpl extends SimpleDataStoreInterface {
     }
 
     @Override
+    public boolean deletePage(String name){
+        MongoStore store = new MongoStore(this.dbName);
+        BasicDBObject page = new BasicDBObject();
+        page.put("name", name);
+        WriteResult res = store.collection(Collections.PAGES).remove(page);
+        store.close();
+        return res.getN()==1;
+    }
+
+    @Override
     public List<MoUser> users() {
         MongoStore store = new MongoStore(this.dbName);
         List<MoUser> users = new ArrayList<>();
@@ -70,6 +81,11 @@ public class MongoDataStoreImpl extends SimpleDataStoreInterface {
             pages().put(page.name(), page);
             return page;
         }
+    }
+
+    @Override
+    public boolean existsPage(String name){
+        return pages().containsKey(name);
     }
 
     @Override

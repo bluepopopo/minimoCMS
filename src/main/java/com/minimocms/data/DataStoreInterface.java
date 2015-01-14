@@ -37,4 +37,11 @@ public interface DataStoreInterface {
 
     public boolean setPageFromJson(Request req, String page);
     public boolean setPageFromJson(String page);
+
+    public boolean existsPage(String name);
+    public boolean existsPage(Request req, String name);
+
+    public boolean deletePage(String name);
+    public boolean deletePage(Request req,String name);
+
 }

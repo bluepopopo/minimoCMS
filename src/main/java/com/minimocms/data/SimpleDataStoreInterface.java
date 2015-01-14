@@ -35,4 +35,14 @@ public abstract class SimpleDataStoreInterface implements DataStoreInterface{
     public boolean setPageFromJson(Request req,String json) {
         return setPageFromJson(json);
     }
+
+    @Override
+    public boolean deletePage(Request req,String name){
+        return deletePage(name);
+    }
+
+    @Override
+    public boolean existsPage(Request req, String name){
+        return existsPage(name);
+    }
 }

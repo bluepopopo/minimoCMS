@@ -30,6 +30,8 @@
 <div class="col-md-12" style="margin-bottom:20px;">
     <button class="btn btn-info" onClick="$('#theform').submit();">Save</button>
     <div id="toggle-preview" class="btn btn-default" onClick="toggleContent()" style="float:right">Toggle Site Preview</div>
+    <a href="$renderUrl" target="_blank" id="toggle-preview" class="btn btn-default" style="float:right;margin-right:10px;">Open Page</a>
+
 </div>
 
 
@@ -40,7 +42,7 @@
 
 
 <div class="col-md-6" style="display:none;margin-bottom:20px;" id="content1">
-    <iframe id="pageIframe" style="border:0;width:100%;height:100%"  src="$url">Sorry, your browser doesn't support iframes, you will not be able to view the preview</iframe>
+    <iframe id="pageIframe" style="border:0;width:100%;height:100%"  src="$renderUrl">Sorry, your browser doesn't support iframes, you will not be able to view the preview</iframe>
 </div>
 
     <div class="col-md-6">

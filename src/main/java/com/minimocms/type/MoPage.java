@@ -14,7 +14,7 @@ public class MoPage implements Serializable {
     String _id;
     String type=Types.page;
     List<GenericContent> children = new ArrayList<>();
-    String url;
+    String url = "/";
 
     public MoPage(){}
 
@@ -29,7 +29,11 @@ public class MoPage implements Serializable {
     }
 
     public void url(String url){
+
         this.url= StringEscapeUtils.escapeHtml(url);
+        if(this.url.startsWith("/")==false){
+            this.url="/"+this.url;
+        }
     }
 
     public String type() {
@@ -38,6 +42,9 @@ public class MoPage implements Serializable {
 
     public String name() {
         return name;
+    }
+    public void name(String n){
+        this.name=n;
     }
 
     public Collection<GenericContent> children() {
@@ -146,16 +153,27 @@ public class MoPage implements Serializable {
         model.put("lists",lists());
         model.put("items",items());
         model.put("url",url());
+        model.put("renderUrl",renderUrl());
         model.put("name",name());
 
         return Velocity.engine.render(new ModelAndView(model, "/assets/minimoassets/vms/render/mo-page.vm"));
     }
 
-    public MoPage copyWithId(){
+    private String renderUrl() {
+        return url().replace(":page-name", name());
+    }
+
+    public MoPage copy(){
+
         MoPage page = new MoPage(name);
         page.url(url());
         for(GenericContent c : children)
-            page.children.add(c.copyWithId());
+            page.children.add(c.copy());
+        return page;
+    }
+
+    public MoPage copyWithId(){
+        MoPage page = copy();
         page._id=_id;
         return page;
     }
