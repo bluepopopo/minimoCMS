@@ -3,6 +3,7 @@ package com.minimocms.type;
 import com.minimocms.utils.Velocity;
 import spark.ModelAndView;
 
+import javax.xml.bind.DatatypeConverter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +12,7 @@ import static com.minimocms.Minimo.store;
 public class MoImageItem extends MoItem {
     String fileId = "";
     String type = Types.imageItem;
-
+    boolean renderB64 = true;
 
     public MoImageItem(String name) {
         super(name);
@@ -36,7 +37,12 @@ public class MoImageItem extends MoItem {
 
     @Override
     public String text() {
-        return url();
+
+        if(renderB64){
+            return "data:image/png;base64,"+ DatatypeConverter.printBase64Binary(fileBytes());
+        } else {
+            return url();
+        }
     }
 
 
