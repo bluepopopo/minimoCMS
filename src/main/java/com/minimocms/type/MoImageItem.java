@@ -34,6 +34,13 @@ public class MoImageItem extends MoItem {
         fileId = store().saveFile(bytes);
     }
 
+    public boolean isRenderB64() {
+        return renderB64;
+    }
+
+    public void setRenderB64(boolean renderB64) {
+        this.renderB64 = renderB64;
+    }
 
     @Override
     public String text() {
