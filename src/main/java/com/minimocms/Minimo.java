@@ -9,10 +9,7 @@ import spark.Request;
 import spark.utils.IOUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class Minimo {
 
@@ -66,10 +63,19 @@ public class Minimo {
     }
 
     public static Collection<MoPage> pages(){
-        return store().pages().values();
+
+        List<MoPage> ps = new ArrayList<>(store().pages().values());
+        Collections.sort(ps, (p1,p2) -> p1.name().compareTo(p2.name()));
+
+        return ps;
     }
     public static Collection<MoPage> pages(Request req){
-        return store().pages(req).values();
+
+        List<MoPage> ps = new ArrayList<>(store().pages(req).values());
+        Collections.sort(ps, (p1,p2) -> p1.name().compareTo(p2.name()));
+
+
+        return ps;
     }
 
     public static MoUser user(String username){
