@@ -10,7 +10,7 @@ public class MoTextItem extends MoItem {
     String text="";
     String type=Types.textItem;
 
-    public MoTextItem(){super();}
+    protected MoTextItem(){super();}
     public MoTextItem(String name) {
         super(name);
     }

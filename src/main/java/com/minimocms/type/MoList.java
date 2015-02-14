@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class MoList  implements GenericContent, Serializable {
+public class MoList implements GenericContent, Serializable {
     String name;
     String label;
     String _id;
@@ -17,7 +17,7 @@ public class MoList  implements GenericContent, Serializable {
     List<GenericContent> children = new ArrayList<>();
     GenericContent itemTemplate;
 
-    public MoList(){}
+    protected MoList(){}
     public MoList(String name) {
         this(name,name);
     }

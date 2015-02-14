@@ -12,7 +12,7 @@ public abstract class MoItem implements GenericContent, Serializable {
     String name;
     String _id;
 
-    public MoItem(){}
+    protected MoItem(){}
     protected MoItem(String name) {
         this.name = name;
         _id = IdUtil.createId();

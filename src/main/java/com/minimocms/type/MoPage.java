@@ -17,7 +17,7 @@ public class MoPage implements Serializable {
     String url = "/";
     boolean copyable=false;
 
-    public MoPage(){}
+    protected MoPage(){}
 
 
     public MoPage(String name) {

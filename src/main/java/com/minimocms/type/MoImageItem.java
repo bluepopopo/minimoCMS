@@ -18,7 +18,7 @@ public class MoImageItem extends MoItem {
         super(name);
     }
 
-    public MoImageItem() {
+    protected MoImageItem() {
         super();
     }
 

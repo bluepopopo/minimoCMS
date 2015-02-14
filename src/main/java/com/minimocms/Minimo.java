@@ -114,7 +114,7 @@ public class Minimo {
         instance().rollbackPages();
     }
 
-    public static GenericContent findById(MoPage page, List<String> ids){
+    private static GenericContent findById(MoPage page, List<String> ids){
         GenericContent c = page.getChildById(ids.get(0));
         ids.remove(0);
         for (String id : ids) {
@@ -127,7 +127,7 @@ public class Minimo {
         return c;
     }
 
-    public static GenericContent findById(MoPage page, String path){
+    private static GenericContent findById(MoPage page, String path){
         List<String> ids = new ArrayList<>(Arrays.asList(path.substring(1).split("/")));
         return findById(page,ids);
     }

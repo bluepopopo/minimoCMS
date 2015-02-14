@@ -10,7 +10,7 @@ public class MoTextAreaItem extends MoItem {
     String text="";
     String type=Types.textAreaItem;
 
-    public MoTextAreaItem(){super();}
+    protected MoTextAreaItem(){super();}
     public MoTextAreaItem(String name) {
         super(name);
     }

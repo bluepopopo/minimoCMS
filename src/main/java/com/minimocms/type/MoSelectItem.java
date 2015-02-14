@@ -16,7 +16,7 @@ public class MoSelectItem  extends MoItem {
 
     List<Pair<String,String>> options = new ArrayList<>();
 
-    public MoSelectItem(){super();}
+    protected MoSelectItem(){super();}
     public MoSelectItem(String name) {
         super(name);
     }

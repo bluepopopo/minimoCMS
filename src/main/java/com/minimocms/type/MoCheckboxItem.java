@@ -10,7 +10,7 @@ public class MoCheckboxItem extends MoItem {
     boolean checked=false;
     String type = Types.checkboxItem;
 
-    public MoCheckboxItem() {
+    protected MoCheckboxItem() {
         super();
     }
 

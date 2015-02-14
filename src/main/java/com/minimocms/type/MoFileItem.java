@@ -16,7 +16,7 @@ public class MoFileItem extends MoItem {
         super(name);
     }
 
-    public MoFileItem() {
+    protected MoFileItem() {
         super();
     }
 

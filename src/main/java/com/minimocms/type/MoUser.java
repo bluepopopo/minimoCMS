@@ -9,6 +9,8 @@ public class MoUser implements Serializable {
     String passHash;
     String _id;
 
+    protected MoUser(){}
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -20,8 +22,6 @@ public class MoUser implements Serializable {
     public void setId(String id) {
         this._id = id;
     }
-
-    public MoUser(){}
 
     public MoUser(String username, String passHash) {
         this.username = username;

@@ -29,6 +29,8 @@ public class GenericContentSerializer implements JsonSerializer<GenericContent>{
                     return JsonUtil.gson().toJsonTree(genericContent, MoCheckboxItem.class);
                 case Types.fileItem:
                     return JsonUtil.gson().toJsonTree(genericContent, MoFileItem.class);
+                case Types.createdDateMeta:
+                    return JsonUtil.gson().toJsonTree(genericContent, MoCreatedDateMeta.class);
 
                 default:
                     throw new IllegalStateException("Cannot serialize - " + genericContent.name());

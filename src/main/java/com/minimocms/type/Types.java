@@ -15,4 +15,7 @@ public class Types {
     public static final String htmlItem=item+"-html";
     public static final String markdownItem=item+"-markdown";
     public static final String checkboxItem=item+"-checkbox";
+    public static final String rssFeed = "rssFeed";
+    public static final String metaItem =item+"-meta";
+    public static final String createdDateMeta=metaItem+"-createdDate";
 }

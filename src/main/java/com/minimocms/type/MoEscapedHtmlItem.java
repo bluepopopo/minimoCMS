@@ -11,7 +11,7 @@ public class MoEscapedHtmlItem extends MoItem {
     String text="";
     String type=Types.htmlItem;
 
-    public MoEscapedHtmlItem(){super();}
+    protected MoEscapedHtmlItem(){super();}
     public MoEscapedHtmlItem(String name) {
         super(name);
     }

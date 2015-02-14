@@ -32,6 +32,8 @@ public class GenericContentDeserializer implements JsonDeserializer<GenericConte
                     return JsonUtil.gson().fromJson(jsonElement, MoCheckboxItem.class);
                 case Types.fileItem:
                     return JsonUtil.gson().fromJson(jsonElement, MoFileItem.class);
+                case Types.createdDateMeta:
+                    return JsonUtil.gson().fromJson(jsonElement, MoCreatedDateMeta.class);
 
                 default:
                     throw new IllegalStateException("Cannot deserialize - " + jsonElement.getAsJsonObject().get("type").getAsString());

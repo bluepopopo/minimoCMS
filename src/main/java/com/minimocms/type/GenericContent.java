@@ -30,4 +30,5 @@ public interface GenericContent {
     public void setValue(String value);
 
     public void removeChildById(String toDelete);
+
 }

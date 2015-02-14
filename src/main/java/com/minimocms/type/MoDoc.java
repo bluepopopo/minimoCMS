@@ -16,7 +16,7 @@ public class MoDoc implements GenericContent, Serializable {
     String type = Types.document;
     List<GenericContent> children = new ArrayList<>();
 
-    public MoDoc(){}
+    protected MoDoc(){}
     public MoDoc(String name) {
         this.name = name;
         _id = IdUtil.createId();
