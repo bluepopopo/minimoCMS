@@ -9,7 +9,7 @@
             </h3>
         </div><!-- /.box-header -->
 
-        <div id="collapse-$id" class="panel-collapse collapse">
+        <div id="collapse-$id" class="panel-collapse collapse in">
             <div class="box-body">
 
 
