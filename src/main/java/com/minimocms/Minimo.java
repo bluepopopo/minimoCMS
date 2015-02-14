@@ -2,10 +2,7 @@ package com.minimocms;
 
 import com.minimocms.data.DataStoreInterface;
 import com.minimocms.data.mongodb.MongoDataStoreImpl;
-import com.minimocms.type.GenericContent;
-import com.minimocms.type.MoImageItem;
-import com.minimocms.type.MoPage;
-import com.minimocms.type.MoUser;
+import com.minimocms.type.*;
 import com.minimocms.utils.FormUtil;
 import com.minimocms.web.Routes;
 import spark.Request;
@@ -171,6 +168,18 @@ public class Minimo {
                 if(form.files().contains(p.substring("img:".length()))) {
                     try {
                         f.file(IOUtils.toByteArray(form.file(p.substring("img:".length())).getInputStream()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            form.queryParams().stream().filter(p->p.startsWith("file:")).forEach(p->{
+                GenericContent c = findById(page,p.substring("file:".length()));
+                MoFileItem f = (MoFileItem)c;
+                if(form.files().contains(p.substring("file:".length()))) {
+                    try {
+                        f.file(IOUtils.toByteArray(form.file(p.substring("file:".length())).getInputStream()),form.file(p.substring("file:".length())).getName());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

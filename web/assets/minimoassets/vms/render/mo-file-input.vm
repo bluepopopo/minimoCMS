@@ -1,0 +1,7 @@
+<div class="form-group">
+    <label for="$path">$label: <a target="_blank" href="$url">$fileId</a></label>
+
+    <input type="hidden" name="file:$path" value="$fileId"/>
+
+    <input type="file" name="$path" accept="application/pdf"  data-filename-placement="inside"/>
+</div>

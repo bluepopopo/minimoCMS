@@ -61,7 +61,9 @@ public class Routes implements SparkApplication {
         }, new JsonTransformer());
 
         get("/morest/file/:fileid",(req,resp)->{
-            resp.raw().getOutputStream().write(file(decodeUTF8(req.params("fileid"))));
+            resp.type("application/octet-stream");
+            resp.raw().getOutputStream().write(file(decodeUTF8(URLDecoder.decodeUTF8(req.params("fileid")))));
+
             return "";
         }, new JsonTransformer());
 

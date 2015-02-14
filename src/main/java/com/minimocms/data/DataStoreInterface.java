@@ -34,6 +34,7 @@ public interface DataStoreInterface {
     public List<String> fileIds();
     public byte[] file(String id);
     public String saveFile(byte[] bs);
+    public String saveFile(byte[] bytes, String fileName);
 
     public boolean setPageFromJson(Request req, String page);
     public boolean setPageFromJson(String page);

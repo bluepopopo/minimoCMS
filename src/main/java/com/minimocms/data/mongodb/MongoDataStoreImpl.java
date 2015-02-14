@@ -203,4 +203,22 @@ public class MongoDataStoreImpl extends SimpleDataStoreInterface {
         store.close();
         return filename;
     }
+
+    @Override
+    public String saveFile(byte[] bytes, String fileName) {
+        MongoStore store = new MongoStore(this.dbName);
+        GridFS grid = store.gridFS(Collections.FILES);
+
+        if(grid.findOne(fileName)!=null)
+            return grid.findOne(fileName).getFilename();
+
+        GridFSInputFile in = grid.createFile( bytes );
+        in.setFilename(fileName);
+        in.save();
+
+
+        String filename= in.getFilename();
+        store.close();
+        return filename;
+    }
 }

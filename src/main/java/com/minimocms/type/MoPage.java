@@ -15,6 +15,7 @@ public class MoPage implements Serializable {
     String type=Types.page;
     List<GenericContent> children = new ArrayList<>();
     String url = "/";
+    boolean copyable=false;
 
     public MoPage(){}
 
@@ -22,6 +23,14 @@ public class MoPage implements Serializable {
     public MoPage(String name) {
         this.name = name;
         _id = IdUtil.createId();
+    }
+
+    public boolean isCopyable() {
+        return copyable;
+    }
+
+    public void setCopyable(boolean copyable) {
+        this.copyable = copyable;
     }
 
     public String url(){
@@ -159,7 +168,7 @@ public class MoPage implements Serializable {
         return Velocity.engine.render(new ModelAndView(model, "/assets/minimoassets/vms/render/mo-page.vm"));
     }
 
-    private String renderUrl() {
+    public String renderUrl() {
         return url().replace(":page-name", name());
     }
 
