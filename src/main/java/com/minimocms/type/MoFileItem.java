@@ -29,7 +29,14 @@ public class MoFileItem extends MoItem {
     }
 
     public void file(byte[] bytes, String fileName) {
-        fileId = store().saveFile(bytes,fileName);
+//        try {
+//            if(Minimo.maxFileSize>=0){
+//                bytes=ImgUtil.resizeImageAsJPG(bytes, Minimo.maxFileSize);
+//            }
+            fileId = store().saveFile(bytes,fileName);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
 

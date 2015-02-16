@@ -1,22 +1,17 @@
 package com.minimocms.data.mysql;
 
-import com.jcabi.jdbc.*;
-import com.minimocms.utils.JsonUtil;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-import com.mongodb.gridfs.GridFS;
-import com.mongodb.util.JSON;
-import org.apache.commons.dbutils.DbUtils;
-import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.ResultSetHandler;
-import org.apache.commons.dbutils.handlers.MapListHandler;
+import com.jcabi.aspects.Cacheable;
+import com.jcabi.jdbc.ColumnOutcome;
+import com.jcabi.jdbc.JdbcSession;
+import com.jcabi.jdbc.Outcome;
+import com.jcabi.jdbc.SingleOutcome;
+import com.jolbox.bonecp.BoneCPDataSource;
 
-import javax.sql.ConnectionPoolDataSource;
 import javax.sql.DataSource;
-import java.net.UnknownHostException;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
 
 /**
@@ -32,35 +27,29 @@ public class MysqlStore {
         this.dbName=dbName;
     }
 
-    public void insert(String collectionName, String name, String o) {
 
+
+    public Long insert(String collectionName, String name, byte[] blob) {
         try {
-            jdbc().query(connection(),"insert into " + collectionName + " (name,data) values (?,?)", new MapListHandler(), name,o);
+            return sql("insert into " + collectionName + " (name,data) values (?,?)")
+                    .set(name)
+                    .set(blob)
+                    .insert(Outcome.LAST_INSERT_ID);
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            close();
         }
+        return -1L;
     }
 
     public Collection<String> names(String collectionName){
 
         try {
-            jdbc().query(connection(),"select name from " + collectionName + "", new ResultSetHandler<List<String>>() {
-                @Override
-                public List<String> handle(ResultSet rs) throws SQLException {
-                    List<String> names = new ArrayList<String>();
-                    while(rs.next()){
-                        names.add(rs.getString("name"));
-                    }
-                    return names;
-                }
-            });
+            return sql("select name from " + collectionName)
+                    .select(new ColumnOutcome<String>(String.class));
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            close();
         }
+        
         return new ArrayList<>();
     }
 
@@ -68,29 +57,30 @@ public class MysqlStore {
 
 
         try {
-            jdbc().query(connection(),"select data from " + collectionName + " where name=?", new ResultSetHandler<String>() {
-                @Override
-                public String handle(ResultSet resultSet) throws SQLException {
-                    resultSet.next();
-                    return resultSet.getString("data");
-                }
-            }, name);
+            return sql("select data from "+collectionName+" where name=?")
+                    .set(name)
+                    .select(new SingleOutcome<String>(String.class));
 
-//            return
-//                    jdbc().query(connection(),)
-//                            .set(name)
-//                            .select((r,s)->{
-//                                String ret = new SingleOutcome<String>(String.class).handle(r,s);
-//                                r.close();
-//                                s.close();
-//                                return ret;
-//                            });
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            close();
         }
-        return "";
+
+        return null;
+    }
+
+    public byte[] selectBinary(String collectionName,String name){
+
+
+        try {
+            return sql("select data from "+collectionName+" where name=?")
+                    .set(name)
+                    .select(new SingleOutcome<byte[]>(byte[].class));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     private static final String userName="root";
@@ -114,10 +104,24 @@ public class MysqlStore {
 //        }
 //    };
 
+//    public static Outcome<List<Map<String,Object>>> RESULT_MAP = new Outcome<List<Map<String,Object>>>() {
+//        @Override
+//        public List<Map<String,Object>> handle(ResultSet rs, Statement statement) throws SQLException {
+//            ResultSetMetaData md = rs.getMetaData();
+//            int columns = md.getColumnCount();
+//            ArrayList list = new ArrayList();
+//            while (rs.next()){
+//                HashMap row = new HashMap();
+//                for(int i=1; i<=columns; ++i){
+//                    row.put(md.getColumnName(i),rs.getObject(i));
+//                }
+//                list.add(row);
+//            }
+//            return list;
+//        }
+//    };
 
-    public static Outcome<List<Map<String,Object>>> RESULT_MAP = new Outcome<List<Map<String,Object>>>() {
-        @Override
-        public List<Map<String,Object>> handle(ResultSet rs, Statement statement) throws SQLException {
+    public static Outcome<List<Map<String,Object>>> RESULT_MAP = (ResultSet rs, Statement statement) -> {
             ResultSetMetaData md = rs.getMetaData();
             int columns = md.getColumnCount();
             ArrayList list = new ArrayList();
@@ -128,68 +132,46 @@ public class MysqlStore {
                 }
                 list.add(row);
             }
-            rs.close();
-            statement.close();
             return list;
-        }
-    };
+        };
 
-    public QueryRunner jdbc() throws SQLException{
-        return new QueryRunner();
+    public JdbcSession jdbc() throws SQLException{
+        return new JdbcSession(source());
+    }
+
+    public JdbcSession sql(String stmt) throws SQLException {
+        return jdbc().sql(stmt).prepare( s -> s.setQueryTimeout(10000));
     }
 
 
+    @Cacheable(forever = true)
+    private DataSource source() {
 
-    Connection conn;
-    private Connection connection() throws SQLException{
+        Properties p = new Properties();
+        p.put("max_time",10);
 
-        try {
-            conn = getConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return conn;
-    }
-
-    private Connection getConnection() throws SQLException {
-
-        Connection conn = null;
-        Properties connectionProps = new Properties();
-        connectionProps.put("user", userName);
-        connectionProps.put("password", password);
-//        connectionProps.put("initialSize", "10");
-//        connectionProps.put("maxActive", "100");
-//        connectionProps.put("maxIdle", "50");
-//        connectionProps.put("minIdle", "10");
-//        connectionProps.put("loginTimeout", "10");
-//        connectionProps.put("socketTimeout", "200");
-
-        conn = DriverManager.getConnection(
-                "jdbc:mariadb://localhost:3306/"+dbName,
-                connectionProps);
-
-        return conn;
+        BoneCPDataSource src = new BoneCPDataSource();
+        src.setDriverClass("org.mariadb.jdbc.Driver");
+        src.setJdbcUrl("jdbc:mariadb://localhost:3306/" + dbName+"?initialTimeout=60000&connectTimeout=60000&socketTimeout=60000");
+        src.setUser("root");
+        src.setPassword("root");
+        return src;
     }
 
     public void delete(String collectionName,String name) {
         try {
-            jdbc().query(connection(),"delete from "+collectionName+" where name=?", new MapListHandler(), name);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            close();
-        }
-    }
-
-    public void close(){
-        try {
-            DbUtils.close(conn);
+            sql("delete from " + collectionName + " where name=?")
+                    .set(name)
+                    .update(Outcome.VOID);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
 
-    public void insertOrUpdate(String collectionName, String name, String o) {
+    
+
+    public void insertOrUpdate(String collectionName, String name, byte[] o) {
         if(names(collectionName).stream().anyMatch(n->n.equals(name))){
             update(collectionName,name,o);
         } else {
@@ -197,13 +179,17 @@ public class MysqlStore {
         }
     }
 
-    private void update(String collectionName, String name, String o) {
+    private void update(String collectionName, String name, byte[] blob) {
+        
         try {
-            jdbc().query(connection(),"update " + collectionName + " set data=? where name=?", new MapListHandler(), name,o);
+            sql("update " + collectionName + " set data=? where name=?")
+                    .set(blob)
+                    .set(name)
+                    .update(Outcome.VOID);
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            close();
         }
     }
+
+
 }

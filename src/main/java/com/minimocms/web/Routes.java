@@ -62,7 +62,6 @@ public class Routes implements SparkApplication {
 
         get("/morest/file/:fileid",(req,resp)->{
             resp.raw().getOutputStream().write(file(decodeUTF8(URLDecoder.decodeUTF8(req.params("fileid")))));
-
             return "";
         }, new JsonTransformer());
 
@@ -133,6 +132,7 @@ public class Routes implements SparkApplication {
 
         get("/minimofile/:fileid",(req,resp)->{
             resp.raw().getOutputStream().write(file(decodeUTF8(req.params("fileid"))));
+
             return "";
         });
 

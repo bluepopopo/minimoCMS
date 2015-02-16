@@ -13,10 +13,10 @@ import java.util.*;
 
 public class Minimo {
 
+    public static int maxFileSize=1600;
     public DataStoreInterface store;
     String siteName;
     static boolean restAuthentication=true;
-
 
     public static void main(String args[]){
         if(args.length==0){

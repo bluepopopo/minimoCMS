@@ -3,20 +3,11 @@ package com.minimocms.data.mysql;
 import com.google.gson.reflect.TypeToken;
 import com.minimocms.data.Collections;
 import com.minimocms.data.SimpleDataStoreInterface;
-import com.minimocms.data.mongodb.MongoStore;
 import com.minimocms.type.MoPage;
 import com.minimocms.type.MoUser;
 import com.minimocms.utils.IdUtil;
 import com.minimocms.utils.JsonUtil;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import com.mongodb.WriteResult;
-import com.mongodb.gridfs.GridFS;
-import com.mongodb.gridfs.GridFSInputFile;
-import com.mongodb.util.JSON;
-import spark.utils.IOUtils;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -120,12 +111,15 @@ public class MysqlDataStoreImpl extends SimpleDataStoreInterface {
 
     @Override
     public void persistPage(MoPage page) {
-        store.insertOrUpdate(Collections.PAGES,page.name(),JsonUtil.toJson(page));
+
+
+
+        store.insertOrUpdate(Collections.PAGES,page.name(),JsonUtil.toJson(page).getBytes());
     }
 
     @Override
     public void persistUser(MoUser user) {
-        store.insertOrUpdate(Collections.PAGES, user.getUsername(), JsonUtil.toJson(user));
+        store.insertOrUpdate(Collections.USERS, user.getUsername(), JsonUtil.toJson(user).getBytes());
     }
 
     @Override
@@ -153,7 +147,7 @@ public class MysqlDataStoreImpl extends SimpleDataStoreInterface {
     @Override
     public byte[] file(String filename) {
 
-        return store.select(Collections.FILES,filename).getBytes();
+        return store.selectBinary(Collections.FILES,filename);
     }
 
     @Override
@@ -164,7 +158,7 @@ public class MysqlDataStoreImpl extends SimpleDataStoreInterface {
             return md5;
         }
 
-        store.insertOrUpdate(Collections.FILES, md5, new String(bytes));
+        store.insertOrUpdate(Collections.FILES, md5, bytes);
 
         return md5;
     }
@@ -177,7 +171,7 @@ public class MysqlDataStoreImpl extends SimpleDataStoreInterface {
             return md5;
         }
 
-        store.insertOrUpdate(Collections.FILES,md5,new String(bytes));
+        store.insertOrUpdate(Collections.FILES,md5,bytes);
 
         return md5;
     }
