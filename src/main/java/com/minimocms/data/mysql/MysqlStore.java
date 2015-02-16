@@ -19,6 +19,10 @@ import java.util.*;
  */
 public class MysqlStore {
 
+    // Use the following to allow large files
+    // set global max_allowed_packet=10485760;
+
+
     final static String SERVER="localhost";
 
     String dbName;
