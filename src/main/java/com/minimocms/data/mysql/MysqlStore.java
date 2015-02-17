@@ -5,7 +5,9 @@ import com.jcabi.jdbc.ColumnOutcome;
 import com.jcabi.jdbc.JdbcSession;
 import com.jcabi.jdbc.Outcome;
 import com.jcabi.jdbc.SingleOutcome;
-import com.jolbox.bonecp.BoneCPDataSource;
+import com.minimocms.Minimo;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -147,19 +149,28 @@ public class MysqlStore {
         return jdbc().sql(stmt).prepare( s -> s.setQueryTimeout(10000));
     }
 
+    DataSource ds;
 
-    @Cacheable(forever = true)
     private DataSource source() {
+        if(ds!=null)return ds;
 
-        Properties p = new Properties();
-        p.put("max_time",10);
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl("jdbc:mariadb://localhost:3306/" + dbName + "?initialTimeout=60000&connectTimeout=60000&socketTimeout=60000");
+        config.setUsername("root");
+        config.setPassword("root");
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        config.addDataSourceProperty("useServerPrepStmts", "true");
+        config.addDataSourceProperty("dataSourceClassName","org.mariadb.jdbc.Driver");
 
-        BoneCPDataSource src = new BoneCPDataSource();
-        src.setDriverClass("org.mariadb.jdbc.Driver");
-        src.setJdbcUrl("jdbc:mariadb://localhost:3306/" + dbName+"?initialTimeout=60000&connectTimeout=60000&socketTimeout=60000");
-        src.setUser("root");
-        src.setPassword("root");
-        return src;
+        HikariDataSource hds = new HikariDataSource(config);
+
+        hds.setMinimumIdle(1);
+        if(Minimo.maxPoolSize >0)hds.setMaximumPoolSize(Minimo.maxPoolSize);
+
+        ds=hds;
+        return ds;
     }
 
     public void delete(String collectionName,String name) {
