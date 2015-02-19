@@ -45,7 +45,7 @@ public class FormUtil {
 
         } else {
             req.raw().getParameterMap().forEach((key,value)->{
-                inputs.put(key, ((String[])value)[0]);
+                inputs.put((String)key, ((String[])value)[0]);
             });
         }
     }
