@@ -25,19 +25,19 @@ public class MyVelocityEngine extends TemplateEngine {
 //        properties.setProperty(
 //                "class.resource.loader.class",
 //                "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+//
+//
+//        if(System.getProperty("minimo.assetPath")!=null){
+//            properties.setProperty(RuntimeConstants.RESOURCE_LOADER, "file");
+//            properties.setProperty("file.resource.loader.path", System.getProperty("minimo.basePath"));
+//            properties.setProperty("file.resource.loader.class", org.apache.velocity.runtime.resource.loader.FileResourceLoader.class.getName());
+//            properties.setProperty("file.resource.loader.cache", "false");
+//
+//        } else {
 
+        properties.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
+        properties.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
 
-        if(System.getProperty("minimo.assetPath")!=null){
-            properties.setProperty(RuntimeConstants.RESOURCE_LOADER, "file");
-            properties.setProperty("file.resource.loader.path", System.getProperty("minimo.assetPath"));
-            properties.setProperty("file.resource.loader.class", org.apache.velocity.runtime.resource.loader.FileResourceLoader.class.getName());
-            properties.setProperty("file.resource.loader.cache", "false");
-
-        } else {
-
-            properties.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
-            properties.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
-        }
 
         properties.setProperty("eventhandler.include.class", "org.apache.velocity.app.event.implement.IncludeRelativePath");
         velocityEngine = new org.apache.velocity.app.VelocityEngine(properties);
