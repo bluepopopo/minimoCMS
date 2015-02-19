@@ -157,7 +157,7 @@ public class MysqlStore {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl("jdbc:mariadb://localhost:3306/" + dbName + "?initialTimeout=60000&connectTimeout=60000&socketTimeout=60000");
         config.setUsername("root");
-        config.setPassword("root");
+        config.setPassword(System.getProperty("mingenew.password"));
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
