@@ -6,6 +6,7 @@ import com.minimocms.type.MoList;
 import com.minimocms.type.MoPage;
 import com.minimocms.type.MoUser;
 import com.minimocms.utils.*;
+import com.mongodb.util.Hash;
 import org.apache.commons.lang.StringEscapeUtils;
 import spark.ModelAndView;
 import spark.servlet.SparkApplication;
@@ -197,12 +198,23 @@ public class Routes implements SparkApplication {
             }
         });
 
+        get("/404",(req,resp)->{
+            return new ModelAndView(new HashMap<>(),"/assets/minimoassets/vms/404.vm");
+        },Velocity.engine);
+
         before("/minimo", (req, resp) -> {
-            resp.redirect("/minimo/page/"+pages().iterator().next().name());
+            try {
+                resp.redirect("/minimo/page/" + pages(req).iterator().next().name());
+            }catch(Exception e){
+                resp .redirect("/404");
+            }
             halt();
         });
 
         get("/mo-create-user", (req,resp)->{
+            if(users().size()>0){
+                resp.redirect("/mologin");
+            }
             Map<String, Object> model = new HashMap<>();
             return new ModelAndView(model,"/assets/minimoassets/vms/create-user.vm");
         }, Velocity.engine);
