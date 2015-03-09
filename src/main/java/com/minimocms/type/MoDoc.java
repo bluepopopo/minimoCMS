@@ -60,6 +60,22 @@ public class MoDoc implements GenericContent, Serializable {
             return ls;
         }
     }
+
+
+    public MoDoc document(String docName) {
+        if(getChildByName(docName)!=null){
+            if(getChildByName(docName) instanceof MoDoc){
+                return (MoDoc)getChildByName(docName);
+            } else {
+                throw new IllegalArgumentException ("Child - "+docName+" already exists and is not of type MoDoc");
+            }
+        } else {
+            MoDoc doc = new MoDoc(docName);
+            children.add(doc);
+            return doc;
+        }
+    }
+
     private Map model(String path){
 
         Map<String, Object> model = new HashMap<>();

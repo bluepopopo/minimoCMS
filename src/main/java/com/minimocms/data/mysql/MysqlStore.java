@@ -1,6 +1,5 @@
 package com.minimocms.data.mysql;
 
-import com.jcabi.aspects.Cacheable;
 import com.jcabi.jdbc.ColumnOutcome;
 import com.jcabi.jdbc.JdbcSession;
 import com.jcabi.jdbc.Outcome;
@@ -22,7 +21,7 @@ import java.util.*;
 public class MysqlStore {
 
     // Use the following to allow large files
-    // set global max_allowed_packet=10485760;
+    // set global max_allowed_packet=104857600;
 
 
     final static String SERVER="localhost";
@@ -157,7 +156,7 @@ public class MysqlStore {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl("jdbc:mariadb://localhost:3306/" + dbName + "?initialTimeout=60000&connectTimeout=60000&socketTimeout=60000");
         config.setUsername("root");
-        config.setPassword(System.getProperty("mingenew.password"));
+        config.setPassword(System.getProperty("minimo.mysql.password"));
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
