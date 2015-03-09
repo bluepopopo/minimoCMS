@@ -15,7 +15,6 @@ import com.mongodb.gridfs.GridFSInputFile;
 import com.mongodb.util.JSON;
 import spark.utils.IOUtils;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -178,11 +177,13 @@ public class MongoDataStoreImpl extends SimpleDataStoreInterface {
         byte[] bs=null;
         try {
             return IOUtils.toByteArray(store.gridFS(Collections.FILES).findOne(filename).getInputStream());
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Could not get file with filename:"+filename);
+        } catch (Exception e) {
+            e.printStackTrace();
+//            throw new IllegalArgumentException("Could not get file with filename:"+filename);
         } finally {
             store.close();
         }
+        return new byte[0];
     }
 
     @Override

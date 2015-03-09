@@ -6,7 +6,6 @@ import com.minimocms.type.MoList;
 import com.minimocms.type.MoPage;
 import com.minimocms.type.MoUser;
 import com.minimocms.utils.*;
-import com.mongodb.util.Hash;
 import org.apache.commons.lang.StringEscapeUtils;
 import spark.ModelAndView;
 import spark.servlet.SparkApplication;
@@ -123,6 +122,7 @@ public class Routes implements SparkApplication {
 
         post("/minimo/upload-json",(req,resp)->{
             boolean success = Minimo.store().setPagesFromJson(req,req.queryParams("json"));
+            Minimo.persistPages();
             if(success){
                 resp.redirect("/minimo/upload-json?upload=success");
             } else {
