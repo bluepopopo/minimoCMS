@@ -8,7 +8,7 @@
 
         var name="$path";
         var text = "$text";
-        $('#'+name).jqteVal(text);
+        $('textarea[name="'+name+'"]').jqteVal(text);
 
     });
     </script>
