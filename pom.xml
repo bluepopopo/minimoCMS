@@ -34,7 +34,7 @@
 
 	<groupId>com.minimocms</groupId>
 	<artifactId>minimo</artifactId>
-	<version>1.01-SNAPSHOT</version>
+	<version>1.0</version>
 	<packaging>jar</packaging>
 
  

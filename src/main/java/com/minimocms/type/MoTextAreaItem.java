@@ -1,6 +1,7 @@
 package com.minimocms.type;
 
 import com.minimocms.utils.Velocity;
+import org.apache.commons.lang.StringEscapeUtils;
 import spark.ModelAndView;
 
 import java.util.HashMap;
@@ -45,7 +46,7 @@ public class MoTextAreaItem extends MoItem {
         Map<String, Object> model = new HashMap<>();
         model.put("label",name());
         model.put("path",path+"/"+id());
-        model.put("text",text());
+        model.put("text", StringEscapeUtils.escapeJavaScript(text()));
         return model;
     }
 
