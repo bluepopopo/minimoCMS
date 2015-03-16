@@ -1,4 +1,16 @@
 <div class="form-group">
     <label for="$path">$label</label>
-    <textarea type="text" name="$path" class="form-control teeditor" rows="5" cols="30">$text</textarea>
+    <textarea type="text" name="$path" id="$path" class="form-control teeditor" rows="5" cols="30"></textarea>
+
+    <script type="text/javascript">
+        $(function(){
+
+
+        var name="$path";
+        var text = "$text";
+        $('#'+name).jqteVal(text);
+
+    });
+    </script>
+
 </div>
